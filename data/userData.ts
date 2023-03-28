@@ -24,7 +24,6 @@ const createUser = (id: string, name: string, email:string, password: string) =>
  * Function to confirm user in database
  * used to avoid duplicate user creation
  * @param {string} userEmail
- * @param {object} usersDB
  * @returns {boolean or undefined} true if user in database or undefined
  */
 const getUserByEmail = async (userEmail: string): Promise<IUserModel | undefined> => {
