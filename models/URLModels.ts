@@ -1,7 +1,8 @@
 import moment from "moment";
+import { IURLModel } from "../types/urlData";
 
 
-let urlData = [
+let urlData: IURLModel[] = [
   { 
     shortenedURL : "b2xVn2",
     longURL: "http://www.lighthouselabs.ca",
