@@ -28,7 +28,7 @@ const createUser = (id: string, name: string, email:string, password: string) =>
  * @returns {boolean or undefined} true if user in database or undefined
  */
 const getUserByEmail = async (userEmail: string): Promise<IUserModel | undefined> => {
-  const user: any =  users.filter((user: IUserModel) => user.email === userEmail);
+  const user: any =  await users.filter((user: IUserModel) => user.email === userEmail);
   if (user) {
     return user;
   }
