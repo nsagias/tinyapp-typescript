@@ -1,20 +1,22 @@
-
+import bcrypt from "bcryptjs";
+import { users } from "../models/userModels";
+import { IUserModel } from "../types/user";
 /**
  * Function to used to create a new user
  * @param {string} id
  * @param {string} name
  * @param {string} email
  * @param {string} password
- * @param {object} userDB
- * @returns {object} enters the new user into the database "userDB"
+ * @returns {array} enters the new user into the database
  */
-const createUser = (id:any, name: string, email:string, password:string, userDB: any) => {
-  return userDB[id] = {
-    id: id,
-    name: name,
-    email: email,
-    password: password
+const createUser = (id: string, name: string, email:string, password: string) => {
+  let result: IUserModel | null = { 
+    id: id, 
+    name: name, 
+    email: email, 
+    password: bcrypt.hashSync(password, 10)
   };
+  return users.push(...users, result);
 };
 
 
@@ -36,5 +38,5 @@ const findUserByEmail = (userEmail: string, usersDB: any) => {
 
 module.exports = {
   createUser,
-  findUserByEmail
+  // findUserByEmail
 };
