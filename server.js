@@ -2,10 +2,8 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 const bcrypt = require('bcryptjs');
-const cookieSession = require('cookie-session');
 const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
+
 const {
   users,
   urlDatabase
@@ -21,37 +19,20 @@ const {
 const moment = require('moment');
 
 app.use(morgan('short'));
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(cookieSession({
-  name: 'session',
-  keys: ['the longer the better', 'two is betther than one'],
-}));
-
-app.set("view engine", "ejs");
+app.use
 
 
 
 
-/**************************************
- * 400 Error Route
- * GET /400
- **************************************/
-let statusCodeError = {};
-app.get('/400', (req, res) => {
-  let templateVars = {
-    user: null,
-    statusCodeError
-  };
-  res.render('400', templateVars);
-});
 
 
-/**************************************
- * 401 Error Route
- * GET /401
-**************************************/
+
+
+
+
+/**
+ * 
+ */
 app.get('/401', (req, res) => {
   let templateVars = {
     user: null,
@@ -61,17 +42,6 @@ app.get('/401', (req, res) => {
 });
 
 
-/**************************************
- * 403 Error Route
- * GET /403
- **************************************/
-app.get('/403', (req, res) => {
-  let templateVars = {
-    user: null,
-    statusCodeError
-  };
-  res.render('403', templateVars);
-});
 
 
 
