@@ -18,10 +18,15 @@
   "license": "ISC",
   "homepage": "https://github.com/nsagias/tinyapp#readme",
   "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/moment": "^2.13.0",
     "@types/sequelize": "^4.28.14",
-    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "debug": "^4.3.4",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.30.0"
