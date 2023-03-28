@@ -27,16 +27,15 @@ const createUser = (id: string, name: string, email:string, password: string) =>
  * @param {object} usersDB
  * @returns {boolean or undefined} true if user in database or undefined
  */
-const findUserByEmail = (userEmail: string, usersDB: any) => {
-  for (let user in usersDB) {
-    if (usersDB[user].email === userEmail) {
-      return true;
-    }
+const getUserByEmail = async (userEmail: string): Promise<IUserModel | undefined> => {
+  const user: any =  users.filter((user: IUserModel) => user.email === userEmail);
+  if (user) {
+    return user;
   }
   return undefined;
 };
 
 module.exports = {
   createUser,
-  // findUserByEmail
+  getUserByEmail
 };
