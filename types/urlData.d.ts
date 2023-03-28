@@ -1,8 +1,7 @@
-export type URLDataListItem = {
+export interface IURLModel {
   shortenedURL: string;
-  urlData: {
-      longURL: string;
-      userID: string;
-      createdAt: string;
-  };
+  longURL: string;
+  userID: string;
+  createdAt: string;
 };
+
