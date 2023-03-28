@@ -32,16 +32,26 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.19.2",
+    "@types/chai": "^4.3.4",
+    "@types/chai-as-promised": "^7.1.5",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.17",
+    "@types/mocha": "^10.0.1",
     "@types/moment": "^2.13.0",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.10",
+    "@types/pg": "^8.6.6",
     "@types/sequelize": "^4.28.14",
+    "@types/sinon": "^10.0.13",
     "@types/uuid": "^9.0.1",
     "@types/validator": "^13.7.14",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
     "concurrently": "^7.6.0",
+    "mocha": "^10.2.0",
     "nodemon": "^2.0.22",
+    "sinon": "^15.0.3",
+    "ts-node": "^10.9.1",
     "typescript": "^5.0.2"
   }
 }
