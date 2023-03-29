@@ -16,7 +16,7 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
     if (!userId) throw new Error("missing user params");
     if (!cookieUserId) throw new Error("please authenticate")
 
-    const urls = await getUrlsByUserId(userId);
+    const urls = await getUrlsByUserId(cookieUserId);
     res.json({ data: urls });
     
   } catch (error) {

@@ -96,37 +96,6 @@ app.use("/", routes);
 
 
 
-
-
-// /***************************************
-//  * Displays URLs for authenticated user
-//  * GET /urls
-//  ***************************************/
-// app.get("/urls", (req, res) => {
-//   // get userID from session and check
-//   const userId = req.session["userID"];
-//   // return ot login if user not logged in
-//   if (!userId) {
-//     statusCodeError = {
-//       '401': 'Unauthorised_Access',
-//       message: 'Please Login'
-//     };
-//     return res.status(401).redirect('401');
-//   }
-//   // get user id from user database
-//   const user = users[userId];
-//   // get urs for the user
-//   let userURLs = urlsForUser(userId, urlDatabase);
-//   // add urls to templateVvars with user id
-//   const templateVars = {
-//     user: user,
-//     urls: userURLs,
-//   };
-//   res.render('urls_index', templateVars);
-// });
-
-
-
 // /***************************************
 //  * Create new short url
 //  * POST /urls
