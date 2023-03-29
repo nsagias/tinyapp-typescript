@@ -5,29 +5,14 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import logger from "morgan";
-import bcrypt from "bcryptjs"
-import moment from "moment";
-// import { } from "./helpers/helpers.js";
+import { getUserByEmail } from "./data/userData";
+import { IUserModel } from "./types/user";
+import { checkPassword } from "./services/authService";
 
 dotenv.config();
-
-
-// const {
-//   users,
-//   urlDatabase
-// } = require('./helperFunctions/databases');
-// const {
-//   shortURLGenerator,
-//   userId,
-//   findUserByEmail,
-//   newUser,
-//   authenticateByPassword,
-//   urlsForUser
-// } = require('./helperFunctions/helpers');
-
 const app: Express = express();
 const port = process.env.PORT;
-// console.log("PROCESSENV", process.env)
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -37,23 +22,11 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.get('/', (req: Request, res: Response) => {
+
+app.get("/", (req: Request, res: Response) => {
   console.log("REQ",req.query);
   res.send("HOME");
 });
-
-
-// http://localhost:3001/users/1/?page=1&limit=10&search=:search
-app.get('/users/:userId', (req: Request, res: Response) => {
-  console.log("REQ.PARAM",req.params);
-  console.log("REQ.QUERY",req.query);
-  res.send("user");
-});
-
-app.get('/401', (req, res) => {
-  res.send('401');
-});
-
 
 // /**************************************
 //  * Home route
@@ -68,6 +41,90 @@ app.get('/401', (req, res) => {
 //   }
 //   return res.redirect("/urls");
 // });
+
+// http://localhost:3001/users/1/?page=1&limit=10&search=:search
+app.get("/users/:userId", (req: Request, res: Response) => {
+  console.log("REQ.PARAM",req.params);
+  console.log("REQ.QUERY",req.query);
+  res.send("user");
+});
+
+app.get('/401', (req, res) => {
+  res.send('401');
+});
+
+app.get("/login", async (req: Request, res: Response) => {
+  const myUserId = "815bd08a";
+
+  const user: IUserModel | undefined = await getUserByEmail("red@example.com");
+  const userAuth: boolean = await checkPassword("red@example.com", "abc123");
+  console.log("*USER",user)
+  console.log("***Auth:", userAuth)
+  await res.cookie("userID", myUserId);
+  await res.json({ name: "nick", userId: myUserId, bingo: user!.email, userAuth});
+});
+
+
+
+// app.post("/login", (req: Request, res: Response) => {
+//   try {
+//     // Check for body 
+//     const email = req.body && req.body.email || null;
+//     const password = req.body && req.body.password || null;
+//     if (!email || !password) {
+//       throw new Error("Missing_Email_Or_Password 1");
+//     }
+
+//     // check for empty strings
+//     const parsedEmail = email.trim();
+//     const parsedPassword = password.trim();
+
+//     if (parsedEmail === "" || parsedPassword === "") {
+//       throw new Error("Missing_Email_Or_Password 2");
+//     }
+    
+//   } catch (error) {
+//       console.error(error);
+//       return res.status(404).send("404");
+//   }
+  
+//   // get users from database
+// //   const usersDB = users;
+
+
+// //   // check if is a current user
+// //   const isCurrentUser = findUserByEmail(emailT, usersDB);
+// //   // if no user found send 403 and message too register
+// //   if (!isCurrentUser) {
+// //     statusCodeError = {
+// //       '403': 'Not_User_Found',
+// //       message: 'Please Create Account'
+// //     };
+// //     return res.status(403).redirect('403');
+// //   }
+
+// //   // Authenticale user returns user id
+// //   const isAuthenticated = authenticateByPassword(emailT, passwordT, usersDB);
+// //   // if password returns false 403 response
+// //   if (!isAuthenticated) {
+// //     statusCodeError = {
+// //       '403': 'Password_Does_Not_Match',
+// //       message: 'Password or login id does not match'
+// //     };
+// //     return res.status(403).redirect('403');
+// //   }
+// //   // add id to to session for valid user
+// //   const userID = isAuthenticated;
+// //   req.session.userID = userID;
+
+// //   // redirect to urls
+// //   res.redirect("urls");
+// });
+
+
+
+
+
 
 
 // /***************************************
@@ -397,17 +454,6 @@ app.get('/401', (req, res) => {
 //   // redirect to urls
 //   res.redirect("urls");
 // });
-
-// /***************************************
-//  * Create server
-//  * listens on PORT
-//  ***************************************/
-// app.listen(PORT, () => {
-//   console.log(`Example app listening on port ${process.env.PORT || PORT}`);
-// });
-
-
-
 
 
 app.listen(port, () => {
