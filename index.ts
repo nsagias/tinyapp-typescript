@@ -39,11 +39,6 @@ app.use("/", routes);
 // });
 
 
-
-
-
-
-
 // app.post("/login", (req: Request, res: Response) => {
 //   try {
 //     // Check for body 
@@ -98,8 +93,6 @@ app.use("/", routes);
 // //   // redirect to urls
 // //   res.redirect("urls");
 // });
-
-
 
 
 
