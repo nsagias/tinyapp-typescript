@@ -2,7 +2,7 @@ import moment from "moment";
 import { IURLModel } from "../types/urlData";
 
 
-export let urlData: IURLModel[] = [
+export const urlData: IURLModel[] = [
   { 
     shortenedURL : "b2xVn2",
     longURL: "http://www.lighthouselabs.ca",
