@@ -8,6 +8,7 @@ import logger from "morgan";
 import { getUserByEmail } from "./data/userData";
 import { IUserModel } from "./types/user";
 import { checkPassword } from "./services/authService";
+import { routes } from './routes';
 
 dotenv.config();
 const app: Express = express();
@@ -21,12 +22,9 @@ app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use("/", routes);
 
 
-app.get("/", (req: Request, res: Response) => {
-  console.log("REQ",req.query);
-  res.send("HOME");
-});
 
 // /**************************************
 //  * Home route
@@ -42,26 +40,29 @@ app.get("/", (req: Request, res: Response) => {
 //   return res.redirect("/urls");
 // });
 
-// http://localhost:3001/users/1/?page=1&limit=10&search=:search
-app.get("/users/:userId", (req: Request, res: Response) => {
-  console.log("REQ.PARAM",req.params);
-  console.log("REQ.QUERY",req.query);
-  res.send("user");
-});
 
-app.get('/401', (req, res) => {
-  res.send('401');
-});
 
+
+// app.post
 app.get("/login", async(req: Request, res: Response) => {
   const myUserId = "815bd08a";
-
   const user: IUserModel | undefined = await getUserByEmail("red@example.com");
   const userAuth: boolean = await checkPassword("red@example.com", "abc123");
   console.log("*USER",user)
   console.log("***Auth:", userAuth)
   await res.cookie("userID", myUserId);
   await res.json({ name: "nick", userId: myUserId, bingo: user!.email, userAuth});
+});
+
+// app.post
+app.get("/authenticate", async(req: Request, res: Response) => {
+  const myUserId = "815bd08a";
+  const cookieCheck = req.cookies && req.cookies.userID || null;
+  if (cookieCheck === myUserId) {
+    res.json({ name: "nick"});
+  } else {
+    res.json(null);
+  }
 });
 
 
