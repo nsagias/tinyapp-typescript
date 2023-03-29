@@ -190,64 +190,6 @@ app.use("/", routes);
 // });
 
 
-
-
-// /***************************************
-//  * Register
-//  * POST /register
-//  * Redirects GET/urls
-//  ***************************************/
-// app.post("/register", (req, res) => {
-//   // generate a new ID for user
-//   const id = userId();
-//   const userID = id;
-//   // get data from form
-//   const { name, email, password } = req.body;
-//   // trim password and email
-//   // avoid duplicated and getting around check
-//   const nameT = name.trim();
-//   const emailT = email.trim();
-//   const passwordT = password.trim();
-//   // check for emptry strings in  email or password
-//   if (emailT === '' || passwordT === '' || nameT === '') {
-//     statusCodeError = {
-//       '400': 'Missing_Email_or_Password',
-//       message: 'Please Enter Email Or Password'
-//     };
-//     return res.status(400).redirect('400');
-//   }
-
-//   // check if is a current user
-//   const usersDB = users;
-//   const isCurrentUser = findUserByEmail(emailT, usersDB);
-//   // if user exists return with a 400
-//   if (isCurrentUser) {
-//     // return res.status(400).send('400: Already Exists');
-//     statusCodeError = { '400': 'User_Already_Exists' };
-//     return res.status(400).redirect('400');
-//   }
-//   // create a hashedPassword
-//   const hashedPassword = bcrypt.hashSync(passwordT, 10);
-
-//   // add new userID to session
-//   newUser(id, nameT, emailT, hashedPassword, usersDB);
-//   req.session.userID = userID;
-//   return res.redirect("urls");
-// });
-
-
-// /***************************************
-//  * Login
-//  * GET /login
-//  * Renders the login form
-//  ***************************************/
-// app.get('/login', (req, res) => {
-//   // get login page/form
-//   const templateVars = { user: null };
-//   res.render('login', templateVars);
-// });
-
-
 // /***************************************
 //  * Login
 //  * POST /login
