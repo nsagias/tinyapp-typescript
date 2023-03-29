@@ -9,7 +9,7 @@ import { IUserModel } from "../types/user";
  * @param {string} password
  * @returns {array} enters the new user into the database
  */
-export const createUser = async (id: string, name: string, email:string, password: string): Promise<boolean> => {
+export const createUser = async (id: string, name: string, email:string, password: string): Promise<IUserModel | boolean> => {
   let newUser: IUserModel | null = { 
     id: id, 
     name: name, 
@@ -18,7 +18,10 @@ export const createUser = async (id: string, name: string, email:string, passwor
   };
   if (newUser) {
     await users.push(...users, newUser);
-    return true;
+    await console.log("CREATED NEW DB", users);
+    await console.log("CREATED NEW USER", newUser);
+    return newUser;
+    // return true;
   }
   return false;
 };
@@ -30,10 +33,10 @@ export const createUser = async (id: string, name: string, email:string, passwor
  * @param {string} userEmail
  * @returns {boolean or undefined} true if user in database or undefined
  */
-export const getUserByEmail = async (userEmail: string): Promise<IUserModel | undefined> => {
+export const getUserByEmail = async (userEmail: string): Promise<IUserModel | boolean> => {
   const user: any =  await users.filter((user: IUserModel) => user.email === userEmail);
   if (user) {
     return user[0];
   }
-  return undefined;
+  return false;
 };
