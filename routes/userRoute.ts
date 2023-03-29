@@ -12,3 +12,16 @@ userRoute.get("/users/:userId", (req: Request, res: Response) => {
   console.log("REQ.QUERY",req.query);
   res.send("user");
 });
+
+
+// userRoute.post
+userRoute.get("/register", (req: Request, res: Response) => {
+  // check if existing user
+
+  // create new user
+
+  // set token/cookie to new user id
+
+  // return new user data 
+ 
+});

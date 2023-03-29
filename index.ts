@@ -191,29 +191,6 @@ app.use("/", routes);
 
 
 
-// /***************************************
-//  * Logout
-//  * POST /logout
-//  * Clears session values
-//  * Redirects to root /GET/
-//  ***************************************/
-// app.post("/logout", (req, res) => {
-//   // set session value to null
-//   req.session = null;
-//   res.redirect("/");
-// });
-
-
-// /***************************************
-//  * Register
-//  * GET /register
-//  * Shows registration screen
-//  ***************************************/
-// app.get("/register", (req, res) => {
-//   const templateVars = { user: null };
-//   res.render("register", templateVars);
-// });
-
 
 // /***************************************
 //  * Register
