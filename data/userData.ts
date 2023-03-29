@@ -9,7 +9,7 @@ import { IUserModel } from "../types/user";
  * @param {string} password
  * @returns {array} enters the new user into the database
  */
-const createUser = (id: string, name: string, email:string, password: string) => {
+export const createUser = (id: string, name: string, email:string, password: string) => {
   let result: IUserModel | null = { 
     id: id, 
     name: name, 
@@ -26,15 +26,10 @@ const createUser = (id: string, name: string, email:string, password: string) =>
  * @param {string} userEmail
  * @returns {boolean or undefined} true if user in database or undefined
  */
-const getUserByEmail = async (userEmail: string): Promise<IUserModel | undefined> => {
+export const getUserByEmail = async (userEmail: string): Promise<IUserModel | undefined> => {
   const user: any =  await users.filter((user: IUserModel) => user.email === userEmail);
   if (user) {
     return user;
   }
   return undefined;
-};
-
-module.exports = {
-  createUser,
-  getUserByEmail
 };

@@ -1,24 +1,19 @@
 import bcrypt from "bcryptjs";
+import { getUserByEmail } from "../data/userData";
+
 /**
- * Function authenticate user by user defined password
- * Takes user provide email password and compares synchronisely
- * to password in database
+ * Check password matches db
  * @param {string} email
  * @param {string} password
- * @param {object} usersDB
  * @returns {string} returns a user ID if authenticated or undefined if not authenticated
  */
-const checkPassword = (email: string, password: string, usersDB: any) => {
-  // bcrypt.compareSync(password, hashedPassword);
-  for (let user in usersDB) {
-    if (usersDB[user].email === email) {
-      let storedPassword = usersDB[user].password;
-      if (bcrypt.compareSync(password, storedPassword)) {
-        return usersDB[user].id;
-      }
-    }
+export const checkPassword = async (email: string, password: string): Promise<boolean> => {
+  const user: any = await getUserByEmail(email);
+  if (!user) {
+    return false;
   }
+  if (bcrypt.compareSync(password, user.password)) {
+   return true; 
+  }
+  return false;
 };
-
-
-module.exports = { checkPassword };
