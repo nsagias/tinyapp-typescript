@@ -62,3 +62,15 @@ authRoute.get("/authenticate", async(req: Request, res: Response) => {
   }
 });
 
+
+/**
+ * Logout
+ */
+authRoute.post("/logout", async (req: Request, res: Response) => {
+  // set session value to null
+  if(req.cookies && req.cookies.userID) {
+    req.cookies = null;
+    res.json({ message: "success"});
+  }
+  res.json({ message: "does not exist"})
+});

@@ -39,63 +39,6 @@ app.use("/", routes);
 // });
 
 
-// app.post("/login", (req: Request, res: Response) => {
-//   try {
-//     // Check for body 
-//     const email = req.body && req.body.email || null;
-//     const password = req.body && req.body.password || null;
-//     if (!email || !password) {
-//       throw new Error("Missing_Email_Or_Password 1");
-//     }
-
-//     // check for empty strings
-//     const parsedEmail = email.trim();
-//     const parsedPassword = password.trim();
-
-//     if (parsedEmail === "" || parsedPassword === "") {
-//       throw new Error("Missing_Email_Or_Password 2");
-//     }
-    
-//   } catch (error) {
-//       console.error(error);
-//       return res.status(404).send("404");
-//   }
-  
-//   // get users from database
-// //   const usersDB = users;
-
-
-// //   // check if is a current user
-// //   const isCurrentUser = findUserByEmail(emailT, usersDB);
-// //   // if no user found send 403 and message too register
-// //   if (!isCurrentUser) {
-// //     statusCodeError = {
-// //       '403': 'Not_User_Found',
-// //       message: 'Please Create Account'
-// //     };
-// //     return res.status(403).redirect('403');
-// //   }
-
-// //   // Authenticale user returns user id
-// //   const isAuthenticated = authenticateByPassword(emailT, passwordT, usersDB);
-// //   // if password returns false 403 response
-// //   if (!isAuthenticated) {
-// //     statusCodeError = {
-// //       '403': 'Password_Does_Not_Match',
-// //       message: 'Password or login id does not match'
-// //     };
-// //     return res.status(403).redirect('403');
-// //   }
-// //   // add id to to session for valid user
-// //   const userID = isAuthenticated;
-// //   req.session.userID = userID;
-
-// //   // redirect to urls
-// //   res.redirect("urls");
-// });
-
-
-
 // /***************************************
 //  * Create new short url
 //  * POST /urls
@@ -125,19 +68,6 @@ app.use("/", routes);
 //   urlDatabase[shortURLId] = newURL;
 
 //   res.redirect(`/urls/${shortURLId}`);
-// });
-
-
-// /***************************************
-//  * Show url
-//  * GET /u/:id
-//  * Retrieves long url from database
-//  * Redirects to long url website
-//  ***************************************/
-// app.get("/u/:shortURL", (req, res) => {
-//   // receives a shoten url from an anonymous user
-//   const longURL = urlDatabase[req.params.shortURL].longURL;
-//   res.redirect(longURL);
 // });
 
 
