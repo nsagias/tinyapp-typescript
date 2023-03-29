@@ -29,7 +29,7 @@ export const createUser = async (id: string, name: string, email:string, passwor
 export const getUserByEmail = async (userEmail: string): Promise<IUserModel | undefined> => {
   const user: any =  await users.filter((user: IUserModel) => user.email === userEmail);
   if (user) {
-    return user;
+    return user[0];
   }
   return undefined;
 };
