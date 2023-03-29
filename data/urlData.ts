@@ -1,14 +1,15 @@
 /**
  * Function to lookup and return users
  * @param {string} id
- * @param {object} db
  * @returns {object} empty object if nothing found or all the urls based on the userID
  */
 
 import { IURLModel } from "../types/urlData";
+import { urlData } from "../models/URLModels";
 
-const getUrlsByUser = async (id: string, db: IURLModel[]): Promise<IURLModel[]> => {
-  return await db.filter(x => x.userID === id);
+
+const getUrlsByUser = async (id: string): Promise<IURLModel[]> => {
+  return await urlData.filter((u: any) => u.userID === id);
 };
 
 module.exports = {
