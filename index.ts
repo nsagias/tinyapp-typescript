@@ -53,7 +53,7 @@ app.get('/401', (req, res) => {
   res.send('401');
 });
 
-app.get("/login", async (req: Request, res: Response) => {
+app.get("/login", async(req: Request, res: Response) => {
   const myUserId = "815bd08a";
 
   const user: IUserModel | undefined = await getUserByEmail("red@example.com");
@@ -63,7 +63,6 @@ app.get("/login", async (req: Request, res: Response) => {
   await res.cookie("userID", myUserId);
   await res.json({ name: "nick", userId: myUserId, bingo: user!.email, userAuth});
 });
-
 
 
 // app.post("/login", (req: Request, res: Response) => {
