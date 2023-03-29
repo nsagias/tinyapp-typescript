@@ -1,14 +1,16 @@
 import { Router } from "express";
-import { rootRoute } from "./rootRoute";
 import { authRoute } from "./authRoute";
-import { userRoute } from "./userRoute";
 import { errorRoute } from "./errorRoute";
+import { rootRoute } from "./rootRoute";
+import { userRoute } from "./userRoute";
+import { urlRoute } from "./urlRoute";
 
 export const routes = Router();
 
-routes.use(rootRoute);
 routes.use(authRoute);
-routes.use(userRoute);
 routes.use(errorRoute);
+routes.use(rootRoute);
+routes.use(userRoute);
+routes.use(urlRoute);
 
 

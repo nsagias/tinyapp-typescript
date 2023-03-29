@@ -20,7 +20,7 @@ authRoute.get("/login", async(req: Request, res: Response) => {
     const email = "red@example.com";
     const password = "abc123";
     if (!email || !password) {
-      throw new Error("Missing_Email_Or_Password 1");
+      throw new Error("missing_email_or_password_1");
     }
 
     // check for empty strings
@@ -28,7 +28,7 @@ authRoute.get("/login", async(req: Request, res: Response) => {
     const parsedPassword = password.trim();
 
     if (parsedEmail === "" || parsedPassword === "") {
-      throw new Error("Missing_Email_Or_Password 2");
+      throw new Error("missing_email_or_password_2");
     }
 
     const user: IUserModel | undefined = await getUserByEmail( parsedEmail || "red@example.com");
@@ -38,14 +38,14 @@ authRoute.get("/login", async(req: Request, res: Response) => {
     console.log("***Auth:", userAuth);
 
     if (!user) {
-      throw new Error("Missing_Email_Or_Password 3");
+      throw new Error("missing_email_or_password_3");
     } else if (user) {
       await res.cookie("userID", myUserId);
       await res.json({ name: "nick", userId: myUserId, email: user!.email, userAuth});
     }
         
-  } catch (error) {
-      console.error(error);
+  } catch (error: any) {
+      console.error("ERROR",error);
       return res.json({ message: "login error"})
   }
 });
