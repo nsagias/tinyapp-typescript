@@ -56,9 +56,10 @@ export const createNewURL = async (longURL: string, userId: string): Promise<IUR
   };
 
   if (newURL) {
+    // TODO: replace with real db
     await urlData.push(...urlData, newURL);
     await console.log("CREATED SHORT URL", newURL);
-    await console.log("CREATED NEW USER", urlData);
+    await console.log("CREATED NEW URL DATA", urlData);
     return newURL;
     // // return true;
   }
