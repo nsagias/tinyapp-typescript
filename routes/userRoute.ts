@@ -1,4 +1,7 @@
 import { Router, Request, Response } from "express";
+import { createUser, getUserByEmail } from "../data/userData";
+import { idGenerator } from "../services/utilsService";
+import { IUserModel } from "../types/user";
 
 export const userRoute = Router();
 
@@ -15,13 +18,56 @@ userRoute.get("/users/:userId", (req: Request, res: Response) => {
 
 
 // userRoute.post
-userRoute.get("/register", (req: Request, res: Response) => {
-  // check if existing user
+userRoute.get("/register", async (req: Request, res: Response) => {
+  const myUserId = "815bd08a"; // mock user 
+  // const email = "red@example.com"; // existing user
+  const email = "fun@example.com"; // new user user
+  const password = "abc123";
+  const name = "bob";
+  try {
+    // Check for body 
+    // const name = req.body && req.body.name || null;
+    // const email = req.body && req.body.email || null;
+    // const password = req.body && req.body.password || null;
+    
+    if (!email || !password || !name) throw new Error("new_account_missing_information_1");
+    
 
-  // create new user
+    // check for empty strings
+    const parsedEmail = email.trim();
+    const parsedPassword = password.trim();
+    const parsedName = name.trim();
 
-  // set token/cookie to new user id
+    if (parsedEmail === "" || parsedPassword === "" || parsedName === "") throw new Error("new_account_missing_information_2");
+  
+    // check if existing user
+    const user: IUserModel | boolean = await getUserByEmail(parsedEmail);
 
-  // return new user data 
+    if (user){
+
+      await res.json({ message: "existing email on file"});
+
+    } else  {
+
+      const newId = await idGenerator();
+      console.log("NEW ID", newId);
+
+      // create new user
+      const newUser = await createUser(newId, parsedName, parsedEmail, parsedPassword);
+      console.log("NEW USER", newUser);
+
+      
+      // set token/cookie to new user id
+      await res.cookie("userID", newId);
+      
+      // return new user data 
+      // TODO: add DTO
+      await res.json({ name: parsedName, userId: newId, email: parsedEmail});
+    }
+        
+  } catch (error: any) {
+      console.error("ERROR",error);
+      return res.json({ message: "account creation error"})
+  }
  
 });
