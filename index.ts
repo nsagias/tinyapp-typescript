@@ -73,39 +73,6 @@ app.use("/", routes);
 
 
 // /***************************************
-//  * Create new short URL
-//  * POST/url/:id
-//  * Redirects tor GET/urls
-//  ***************************************/
-// app.post("/urls/:id", (req, res) => {
-//   // get userID from session
-//   const userId = req.session["userID"];
-//   // if customer not logged in redirect to user screen
-//   if (!userId) {
-//     statusCodeError = {
-//       '401': 'Unauthorised_Access',
-//       message: 'Please Login'
-//     };
-//     return res.status(401).redirect('/401');
-//   }
-//   const shortURLId = req.params.id;
-//   if (userId !== urlDatabase[shortURLId].userID) {
-//     statusCodeError = {
-//       '401': 'Unauthorised_Access',
-//       message: 'Unauthorised_Access'
-//     };
-//     return res.status(401).redirect('/401');
-//   }
-
-//   const longURL = req.body.longURL;
-//   urlDatabase[shortURLId].longURL = longURL;
-//   urlDatabase[shortURLId].createdAt = moment().format('MMMM Do YYYY'),
-//   res.redirect("/urls");
-// });
-
-
-
-// /***************************************
 //  * Delete short url from database
 //  * POST/urls/:id/delete
 //  * Redirects to /GET/urls
