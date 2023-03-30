@@ -2,12 +2,13 @@ import { Router, Request, Response } from "express";
 
 export const rootRoute = Router();
 
-rootRoute.get("/root", (req: Request, res: Response) => {
-  res.json({ root : "root"});
-});
-
-
 rootRoute.get("/", (req: Request, res: Response) => {
-  console.log("REQ",req.query);
-  res.send("HOME");
+  const userId = req.cookies && req.cookies.userID || null;
+
+  // check if active user
+  if (userId) {
+    res.json({ isLoggedIn: true});
+  } else {
+    res.json(false);
+  }
 });
