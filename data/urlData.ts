@@ -78,7 +78,8 @@ export const getURLByLongName = async (longURL: string, userId: string): Promise
   const usersURLs =  await getUrlsByUserId(userId);
 
   // filter if exiting urls exist for user
-  const existingURL = usersURLs && usersURLs.length > 0 && usersURLs.filter(u => u.longURL  === longURL);
+  const existingURL = usersURLs && usersURLs.length > 0 && usersURLs.filter(u => u.longURL  === longURL).length > 0;
+  console.log("XXXXX", existingURL);
   
   // return true if existing
   if(existingURL) return true;

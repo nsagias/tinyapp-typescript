@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createNewURL, getURLByShortenedURL, getUrlsByUserId }   from "../data/urlData";
+import { createNewURL, getURLByLongName, getURLByShortenedURL, getUrlsByUserId }   from "../data/urlData";
 
 export const urlRoute = Router();
 
@@ -64,7 +64,7 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
 
 
 /**
- * Get url by id
+ * Get url by shortendid
  */
 urlRoute.get("/url/:shortenedURL", async (req: Request, res: Response) => {
   try {
@@ -87,9 +87,7 @@ urlRoute.get("/url/:shortenedURL", async (req: Request, res: Response) => {
   }
 });
 
-/**
- * create new url
- */
+
 
 // urlRoute.post
 urlRoute.get("/url/new/:longURL", async (req: Request, res: Response) => {
@@ -101,6 +99,13 @@ urlRoute.get("/url/new/:longURL", async (req: Request, res: Response) => {
 
     if (!longURL)  throw new Error("please provide shortened Url");
     if (!cookieUserId) throw new Error("please authenticate");
+
+    // check if long name already exists
+    const existingLongURL = await getURLByLongName(longURL, cookieUserId);
+
+    console.log("EXISTING URL", existingLongURL );
+
+    if (existingLongURL)  throw new Error("existing url");
     
     // receives a shoten url from an anonymous user
     const longURLData = await createNewURL(longURL, cookieUserId);
