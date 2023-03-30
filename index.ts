@@ -71,62 +71,6 @@ app.use("/", routes);
 // });
 
 
-// /***************************************
-//  * Display create new user form
-//  * GET /urls/new
-//  ***************************************/
-// app.get("/urls/new", (req, res) => {
-//   // check if logged in and exit if not logged in
-//   const userId = req.session["userID"];
-//   if (!userId) {
-//     statusCodeError = {
-//       '401': 'Unauthorised_Access',
-//       message: 'Please Login'
-//     };
-//     return res.status(401).redirect('/401');
-//   }
-//   const user = users[userId];
-//   const templateVars = { user: user };
-//   // show the create new URL screen
-//   res.render("urls_new", templateVars);
-// });
-
-// /***************************************
-//  * Display  a specif short urls created,
-//  * by authenticated user
-//  * GET/urls/:id
-//  ***************************************/
-// app.get("/urls/:shortURL", (req, res) => {
-//   // get user id from session
-//   const userId = req.session["userID"];
-//   // if no userID redirect to login
-//   if (!userId) {
-//     statusCodeError = {
-//       '401': 'Unauthorised_Access',
-//       message: 'Please Login'
-//     };
-//     return res.status(401).redirect('/401');
-//   }
-//   const shortURLId = req.params.shortURL;
-//   if (userId !== urlDatabase[shortURLId].userID) {
-//     statusCodeError = {
-//       '401': 'Unauthorised_Access',
-//       message: 'Unauthorised_Access'
-//     };
-//     return res.status(401).redirect('/401');
-//   }
-//   // get user from user database
-//   const user = users[userId];
-//   const templateVars = {
-//     user: user,
-//     shortURL: req.params.shortURL,
-//     longURL: urlDatabase[req.params.shortURL].longURL,
-//     createdAt: urlDatabase[req.params.shortURL].createdAt,
-//   };
-//   // show single url
-//   res.render("urls_show", templateVars);
-// });
-
 
 // /***************************************
 //  * Create new short URL
