@@ -31,7 +31,7 @@ authRoute.get("/login", async(req: Request, res: Response) => {
       throw new Error("missing_email_or_password_2");
     }
 
-    const user: IUserModel | undefined = await getUserByEmail( parsedEmail || "red@example.com");
+    const user: IUserModel | boolean = await getUserByEmail( parsedEmail || "red@example.com");
     console.log("*USER",user);
 
     const userAuth: boolean = await checkPassword(parsedEmail || "red@example.com", parsedPassword || "abc123");
@@ -41,7 +41,7 @@ authRoute.get("/login", async(req: Request, res: Response) => {
       throw new Error("missing_email_or_password_3");
     } else if (user) {
       await res.cookie("userID", myUserId);
-      await res.json({ name: "nick", userId: myUserId, email: user!.email, userAuth});
+      await res.json({ name: "nick", userId: myUserId, email: user, userAuth});
     }
         
   } catch (error: any) {
