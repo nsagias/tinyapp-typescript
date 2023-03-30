@@ -1,14 +1,7 @@
 import { Router, Request, Response } from "express";
-import { createNewURL, getURLByLongName, getURLByShortenedURL, getUrlsByUserId }   from "../data/urlData";
+import { createNewURL, deleteByShortURLId, getURLByLongName, getURLByShortenedURL, getUrlsByUserId }   from "../data/urlData";
 
 export const urlRoute = Router();
-
-/**
- * Sanity check route
- */
-urlRoute.get("/urls", (req: Request, res: Response) => {
-  res.json({ message: "urls"});
-});
 
 
 /**
@@ -103,8 +96,6 @@ urlRoute.get("/url/new/:longURL", async (req: Request, res: Response) => {
     // check if long name already exists
     const existingLongURL = await getURLByLongName(longURL, cookieUserId);
 
-    console.log("EXISTING URL", existingLongURL );
-
     if (existingLongURL)  throw new Error("existing url");
     
     // receives a shoten url from an anonymous user
@@ -119,3 +110,29 @@ urlRoute.get("/url/new/:longURL", async (req: Request, res: Response) => {
     res.json({ message: "error"});
   }
 });
+
+
+// urlRoute.post
+urlRoute.get("/url/delete/:shortURId", async (req: Request, res: Response) => {
+  try {
+    // TODO: update before
+    // const longURL = req.body && req.body.shortURId|| null;
+    const shortURLId = req.params && req.params.shortURId || null;
+    const userId = req.cookies && req.cookies.userID || null;
+
+    if (!shortURLId)  throw new Error("please provide shortened Url");
+    if (!userId) throw new Error("please authenticate");
+
+    const isDeleted = await deleteByShortURLId(shortURLId, userId);
+
+    if (isDeleted) return res.json({ message: true});
+    
+    res.json({ message: false});
+ 
+  } catch (error: any) {
+    console.error(error);
+    res.json({ message: "error"});
+  }
+});
+
+

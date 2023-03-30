@@ -1,9 +1,3 @@
-/**
- * Function to lookup and return users
- * @param {string} id
- * @returns {object} empty object if nothing found or all the urls based on the userID
- */
-
 import { IURLModel } from "../types/urlData";
 import { urlData } from "../models/URLModels";
 import { idGenerator } from "../services/utilsService";
@@ -14,7 +8,6 @@ import moment from "moment";
  * @param userId urls id
  * @returns all urls for a user
  */
-
 export const getUrlsByUserId = async (userId: string): Promise<IURLModel[]> => {
   return await urlData.filter((u: any) => u.userID === userId);
 };
@@ -29,7 +22,6 @@ export const getURLByShortenedURL = async (shotenedURLId: string) => {
 };
 
 
-
 /**
  * Create new short url for user
  * @param longURL 
@@ -38,10 +30,9 @@ export const getURLByShortenedURL = async (shotenedURLId: string) => {
  */
 export const createNewURL = async (longURL: string, userId: string): Promise<IURLModel | string> => {
   let newShortURLId = await idGenerator();
-  console.log("NEW GENERATED LINK", newShortURLId);
-
+  
   // check if already exists before generatoring
-  let isExistingURL = await getURLByShortenedURL(newShortURLId);
+  const isExistingURL = await getURLByShortenedURL(newShortURLId);
 
   if (isExistingURL) {
     // existing call new url with 8 letter
@@ -57,9 +48,9 @@ export const createNewURL = async (longURL: string, userId: string): Promise<IUR
 
   if (newURL) {
     // TODO: replace with real db
-    await urlData.push(...urlData, newURL);
-    await console.log("CREATED SHORT URL", newURL);
-    await console.log("CREATED NEW URL DATA", urlData);
+    urlData.push(...urlData, newURL);
+    console.log("CREATED SHORT URL", newURL);
+    console.log("CREATED NEW URL DATA", urlData);
     return newURL;
     // // return true;
   }
@@ -80,10 +71,35 @@ export const getURLByLongName = async (longURL: string, userId: string): Promise
 
   // filter if exiting urls exist for user
   const existingURL = usersURLs && usersURLs.length > 0 && usersURLs.filter(u => u.longURL  === longURL).length > 0;
-  console.log("XXXXX", existingURL);
   
   // return true if existing
   if(existingURL) return true;
 
   return false;
 };
+
+
+export const deleteByShortURLId = async (URLId:string, userId: string): Promise<boolean> => {
+  // confirm existing url
+  const isExistingURL = await getURLByShortenedURL(URLId);
+
+  // if doesn't exist return true
+  if (!isExistingURL || isExistingURL.length === 0) return true;
+
+  const isOwnedByLoggedInUser = isExistingURL[0].userID === userId;
+  if (!isOwnedByLoggedInUser) throw new Error("not own by user");
+
+  console.log("IS OWNED BY LOGGED IN USER", isOwnedByLoggedInUser)
+
+  // if existing check belongs to user
+  if (isExistingURL && isOwnedByLoggedInUser) {
+    
+    // TODO: replace with real db
+    const findData = await urlData.findIndex((u: any) => u.shortenedURL === URLId);
+    
+    urlData.splice(findData, 1)
+  
+    return true;
+  }
+  return false;
+}
