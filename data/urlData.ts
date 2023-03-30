@@ -11,21 +11,23 @@ import moment from "moment";
 
 /**
  * Get urls by user id
- * @param id 
- * @returns 
+ * @param userId urls id
+ * @returns all urls for a user
  */
 
-export const getUrlsByUserId = async (id: string): Promise<IURLModel[]> => {
-  return await urlData.filter((u: any) => u.userID === id);
+export const getUrlsByUserId = async (userId: string): Promise<IURLModel[]> => {
+  return await urlData.filter((u: any) => u.userID === userId);
 };
 
 /**
- * Get
- * @param shotenedURLId 
+ * Get url by shortend name
+ * @param shotenedURLId
+ * @returns 
  */
 export const getURLByShortenedURL = async (shotenedURLId: string) => {
   return await urlData.filter((u: any) => u.shortenedURL === shotenedURLId);
 };
+
 
 
 /**
@@ -62,4 +64,24 @@ export const createNewURL = async (longURL: string, userId: string): Promise<IUR
   }
   // return false;
   return "failed to create new url";
+};
+
+
+/**
+ * Get url by long name
+ * @param longURL 
+ * @param userId 
+ * @returns {boolean}
+ */
+export const getURLByLongName = async (longURL: string, userId: string): Promise<boolean> => {
+  // get exiting urls for user
+  const usersURLs =  await getUrlsByUserId(userId);
+
+  // filter if exiting urls exist for user
+  const existingURL = usersURLs && usersURLs.length > 0 && usersURLs.filter(u => u.longURL  === longURL);
+  
+  // return true if existing
+  if(existingURL) return true;
+
+  return false;
 };
