@@ -15,7 +15,6 @@ urlRoute.get("/urls", (req: Request, res: Response) => {
  * Redirect to proper url
  */
 urlRoute.get("/u/:shortenedURL", async (req: Request, res: Response) => {
-
   try {
     const shortenedURL = req.params && req.params.shortenedURL || null;
     if (!shortenedURL) {
@@ -52,10 +51,36 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
     if (!cookieUserId) throw new Error("please authenticate")
 
     const urls = await getUrlsByUserId(cookieUserId);
+    if (!urls || !(urls.length > 0)) throw new Error("No urls found")
 
     // TODO: DTO
     res.json({ message: "success",  data: urls });
     
+  } catch (error: any) {
+    console.error(error);
+    res.json({ message: "error"});
+  }
+});
+
+
+/**
+ * Get url by id
+ */
+urlRoute.get("/url/:shortenedURL", async (req: Request, res: Response) => {
+  try {
+    const shortenedURL = req.params && req.params.shortenedURL || null;
+    const cookieUserId = req.cookies && req.cookies.userID || null;
+
+    if (!shortenedURL)  throw new Error("please provide shortened Url");
+    if (!cookieUserId) throw new Error("please authenticate");
+    
+    // receives a shoten url from an anonymous user
+    const longURLData = await getURLByShortenedURL(shortenedURL)
+    if (!longURLData  || !(longURLData.length > 0)) throw new Error("URL does not exist");
+        
+    // TODO: add DTO
+    res.json({ message: "success", data: longURLData});
+
   } catch (error: any) {
     console.error(error);
     res.json({ message: "error"});
