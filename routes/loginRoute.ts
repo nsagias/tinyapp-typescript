@@ -8,7 +8,7 @@ export const loginRoute = Router();
 
 // app.post
 loginRoute.get("/login", async(req: Request, res: Response) => {
-  const myUserId = "815bd08a";
+  const myUserId = "1";
   try {
     // Check for body 
     // const email = req.body && req.body.email || null;

@@ -5,10 +5,9 @@ import moment from "moment";
 
 /**
  * Get urls by user id
- * @param userId urls id
  * @returns all urls for a user
  */
-export const getUrlsByUserId = async (userId: string): Promise<IURLModel[]> => {
+export const getUrlsByUserId = async (userId: number): Promise<IURLModel[]> => {
   return await urlData.filter((u: any) => u.userID === userId);
 };
 
@@ -28,7 +27,7 @@ export const getURLByShortenedURL = async (shotenedURLId: string) => {
  * @param userId 
  * @returns 
  */
-export const createNewURL = async (longURL: string, userId: string): Promise<IURLModel | string> => {
+export const createNewURL = async (longURL: string, userId: number): Promise<IURLModel | string> => {
   let newShortURLId = await idGenerator();
   
   // check if already exists before generatoring
@@ -65,7 +64,7 @@ export const createNewURL = async (longURL: string, userId: string): Promise<IUR
  * @param userId 
  * @returns {boolean}
  */
-export const getURLByLongName = async (longURL: string, userId: string): Promise<boolean> => {
+export const getURLByLongName = async (longURL: string, userId: number): Promise<boolean> => {
   // get exiting urls for user
   const usersURLs =  await getUrlsByUserId(userId);
 
@@ -79,9 +78,9 @@ export const getURLByLongName = async (longURL: string, userId: string): Promise
 };
 
 
-export const deleteByShortURLId = async (URLId:string, userId: string): Promise<boolean> => {
+export const deleteByShortURLId = async (shortenedURLId:string, userId: number): Promise<boolean> => {
   // confirm existing url
-  const isExistingURL = await getURLByShortenedURL(URLId);
+  const isExistingURL = await getURLByShortenedURL(shortenedURLId);
 
   // if doesn't exist return true
   if (!isExistingURL || isExistingURL.length === 0) return true;
@@ -95,7 +94,7 @@ export const deleteByShortURLId = async (URLId:string, userId: string): Promise<
   if (isExistingURL && isOwnedByLoggedInUser) {
     
     // TODO: replace with real db
-    const findData = await urlData.findIndex((u: any) => u.shortenedURL === URLId);
+    const findData = await urlData.findIndex((u: any) => u.shortenedURL === shortenedURLId);
     
     urlData.splice(findData, 1)
   

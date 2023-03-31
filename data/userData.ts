@@ -3,13 +3,13 @@ import { users } from "../models/userModels";
 import { IUserModel } from "../types/user";
 /**
  * Function to used to create a new user
- * @param {string} id
+ * @param {number} id
  * @param {string} name
  * @param {string} email
  * @param {string} password
  * @returns {array} enters the new user into the database
  */
-export const createUser = async (id: string, name: string, email:string, password: string): Promise<IUserModel | boolean> => {
+export const createUser = async (id: number, name: string, email:string, password: string): Promise<IUserModel | boolean> => {
   let newUser: IUserModel | null = { 
     id: id, 
     name: name, 

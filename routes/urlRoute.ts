@@ -37,8 +37,9 @@ urlRoute.get("/u/:shortenedURL", async (req: Request, res: Response) => {
  */
 urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
   try {
-    const userId = req.params && req.params.userId || null;
-    const cookieUserId = req.cookies && req.cookies.userID || null;
+    // 
+    const userId = req.params && req.params.userId && parseInt(req.params.userId, 10) || null;
+    const cookieUserId = req.cookies && req.cookies.userID && parseInt(req.cookies.userID, 10) || null;
   
     if (!userId) throw new Error("missing user params");
     if (!cookieUserId) throw new Error("please authenticate")

@@ -3,19 +3,19 @@ import { IUserModel } from "../types/user";
 
 export let users: IUserModel[] = [
    {
-    id: "815bd08a",
+    id: 1,
     name: "red",
     email: "red@example.com",
     password: bcrypt2.hashSync("abc123", 10)
   },
    {
-    id: "ec3bdf7a",
+    id: 2,
     name: "green",
     email: "green@example.com",
     password: bcrypt2.hashSync("abc123", 10)
   },
  {
-    id: "1f1ffea1",
+    id: 3, 
     name: "blue",
     email: "blue@example.com",
     password: bcrypt2.hashSync("abc123", 10)
