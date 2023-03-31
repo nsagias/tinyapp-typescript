@@ -63,7 +63,7 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
 urlRoute.get("/url/:shortenedURL", async (req: Request, res: Response) => {
   try {
     const shortenedURL = req.params && req.params.shortenedURL || null;
-    const cookieUserId = req.cookies && req.cookies.userID || null;
+    const cookieUserId = req.cookies && req.cookies.userID && parseInt(req.cookies.userID, 10) || null;
 
     if (!shortenedURL)  throw new Error("please provide shortened Url");
     if (!cookieUserId) throw new Error("please authenticate");
@@ -89,7 +89,7 @@ urlRoute.get("/url/new/:longURL", async (req: Request, res: Response) => {
     // TODO: update before
     // const longURL = req.body && req.body.longURL || null;
     const longURL = req.params && req.params.longURL || null;
-    const cookieUserId = req.cookies && req.cookies.userID || null;
+    const cookieUserId = req.cookies && req.cookies.userID  && parseInt(req.cookies.userID, 10) || null;
 
     if (!longURL)  throw new Error("please provide shortened Url");
     if (!cookieUserId) throw new Error("please authenticate");
@@ -119,7 +119,7 @@ urlRoute.get("/url/delete/:shortURId", async (req: Request, res: Response) => {
     // TODO: update before
     // const longURL = req.body && req.body.shortURId|| null;
     const shortURLId = req.params && req.params.shortURId || null;
-    const userId = req.cookies && req.cookies.userID || null;
+    const userId = req.cookies && req.cookies.userID && parseInt(req.cookies.userID) || null;
 
     if (!shortURLId)  throw new Error("please provide shortened Url");
     if (!userId) throw new Error("please authenticate");
