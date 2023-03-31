@@ -4,13 +4,18 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import logger from "morgan";
+import cors from "cors";
 
 import { routes } from './routes';
 
 dotenv.config();
+
 const app: Express = express();
 const port = process.env.PORT;
+const origin: string | undefined = process.env.corsOptions;
+const corsOptions = { origin };
 
+app.use(cors(corsOptions));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
