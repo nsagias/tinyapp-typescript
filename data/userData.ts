@@ -9,9 +9,9 @@ import { IUserModel } from "../types/user";
  * @param {string} password
  * @returns {array} enters the new user into the database
  */
-export const createUser = async (id: number, name: string, email:string, password: string): Promise<IUserModel | boolean> => {
+export const createUser = async (name: string, email:string, password: string): Promise<IUserModel | boolean> => {
   let newUser: IUserModel | null = { 
-    id: id, 
+  
     name: name, 
     email: email, 
     password: await bcrypt.hashSync(password, 10)

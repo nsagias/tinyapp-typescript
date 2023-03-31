@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
 import { createUser, getUserByEmail } from "../data/userData";
-import { idGenerator } from "../services/utilsService";
 import { IUserModel } from "../types/user";
 
 export const userRoute = Router();
@@ -41,24 +40,27 @@ userRoute.get("/register", async (req: Request, res: Response) => {
     if (parsedEmail === "" || parsedPassword === "" || parsedName === "") throw new Error("new_account_missing_information_2");
   
     // check if existing user
-    const user: IUserModel | boolean = await getUserByEmail(parsedEmail);
+    const userExist: IUserModel | boolean = await getUserByEmail(parsedEmail);
 
-    if (user){
+    if (userExist){
 
       await res.json({ message: "existing email on file"});
 
     } else  {
 
-      const newId = await idGenerator();
-      console.log("NEW ID", newId);
-
       // create new user
-      const newUser = await createUser(newId, parsedName, parsedEmail, parsedPassword);
+      const newUser = await createUser(parsedName, parsedEmail, parsedPassword);
       console.log("NEW USER", newUser);
 
+      // fiuser by email
+      
+      const newId: IUserModel | boolean = await getUserByEmail(parsedEmail);
+
+      if (!newId) throw new Error("User was not created")
       
       // set token/cookie to new user id
       await res.cookie("userID", newId);
+  
       
       // return new user data 
       // TODO: add DTO
