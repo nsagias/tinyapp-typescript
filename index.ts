@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import logger from "morgan";
 import cors from "cors";
-
 import { routes } from './routes';
 
 dotenv.config();
