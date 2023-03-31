@@ -8,7 +8,7 @@ import { loginRoute } from "./loginRoute";
 
 export const routes = Router();
 
-routes.use(authRoute);
+routes.use("/api", authRoute);
 routes.use(errorRoute);
 routes.use(loginRoute);
 routes.use(rootRoute);
