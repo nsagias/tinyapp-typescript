@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { users } from "../models/userModels";
+import { users } from "../databases/userModelSeed";
 import { IUserModel } from "../types/user";
 /**
  * Function to used to create a new user
