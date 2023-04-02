@@ -1,4 +1,4 @@
-CREATE TABLE `tinyapp`.`shorturl` (
+CREATE TABLE `tinyapp`.`shorturls` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `shortendURL` VARCHAR(256) NOT NULL,
   `longURL` VARCHAR(256) NOT NULL,
