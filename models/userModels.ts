@@ -1,8 +1,8 @@
-import { Model, DataTypes, Optional } from "sequelize";
 import bcrypt2 from "bcryptjs";
+import { Association, DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "../databases/sequelize/sequelize_config"
-import ShortURL from "./URLModels";
 import { IUserModel } from "../types/user";
+import ShortURL from "./URLModels";
 
 
 
@@ -33,25 +33,21 @@ export interface UserInput extends Optional<IUserModel, "id" > {}
 export interface UserOutput extends Required<IUserModel> {}
 
 
-// export default class Users extends Model {
-//   declare id: number;
-//   declare name: string;
-//   declare email: string;
-//   declare password: string;
-  
-// }
+class User extends Model implements IUserModel {
+  declare id: number;
+  declare name: string;
+  declare email: string;
+  declare password: string;
+  declare deleted: boolean;
+
+  declare createdAt: Date;
+  declare updatedAt: Date;
+  declare deletedAt: Date;
 
 
-export default class User extends Model<IUserModel, UserInput> implements IUserModel {
-  public id!: number;
-  public name!: string;
-  public email!: string;
-  public password!: string;
-  public deleted!: boolean;
-
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-  public readonly deletedAt!: Date;
+  declare static associations: {
+    shorturls: Association<User, ShortURL>;
+  };
   
 }
 
@@ -77,16 +73,25 @@ User.init({
     allowNull: false,
     field: "password"
   },
-
 }, { 
 
   timestamps: true,
   sequelize,
   paranoid: true,
-  modelName: 'users',
+  modelName: 'users'
 });
 
 // Users.hasMany(Tokens, { foreignKey: "user_id" });
-User.hasMany(ShortURL, { foreignKey: "user_id" });
+// User.hasMany(ShortURL, {
+//   sourceKey: "id",
+//   foreignKey: 'user_id',
+//   as: 'shorturls' // this determines the name in `associations`!
+// });
+// User.hasMany(ShortURL);
 
+// User.sync({ alter: true })
+
+// User.hasMany(ShortURL)
+
+export default User;
 
