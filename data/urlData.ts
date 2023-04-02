@@ -41,8 +41,7 @@ export const createNewURL = async (longURL: string, userId: number): Promise<IUR
   const newURL: IURLModel | null = await { 
     shortenedURL : newShortURLId,
     longURL: longURL,
-    user_id: userId,
-    createdAt: await moment().format('MMMM Do YYYY'),
+    user_id: userId
   };
 
   if (newURL) {
@@ -85,7 +84,7 @@ export const deleteByShortURLId = async (shortenedURLId:string, userId: number):
   // if doesn't exist return true
   if (!isExistingURL || isExistingURL.length === 0) return true;
 
-  const isOwnedByLoggedInUser = isExistingURL[0].userID === userId;
+  const isOwnedByLoggedInUser = isExistingURL[0].user_id === userId;
   if (!isOwnedByLoggedInUser) throw new Error("not own by user");
 
   console.log("IS OWNED BY LOGGED IN USER", isOwnedByLoggedInUser)
