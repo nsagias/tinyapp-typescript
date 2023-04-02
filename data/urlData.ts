@@ -1,5 +1,5 @@
 import { IURLModel } from "../types/urlData";
-import { urlData } from "../models/URLModels";
+import { urlData } from "../models/UrlModel";
 import { idGenerator } from "../services/utilsService";
 import moment from "moment";
 
