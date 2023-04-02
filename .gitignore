@@ -29,3 +29,4 @@ notes.md
 dist/
 
 config.js
+*copy.ts
