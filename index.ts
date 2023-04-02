@@ -6,13 +6,16 @@ import bodyParser from "body-parser";
 import logger from "morgan";
 import cors from "cors";
 import { routes } from './routes';
+import db from "./databases/sequelize/db";
+import { initModels } from './models'
 
-import { User } from "./models";
-import { createUser } from "./data/userData";
+
+import { Token, UrlModel, User } from "./models";
+
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT;
+const port = parseInt(process.env.PORT || '3001');
 const origin: string | undefined = process.env.corsOptions;
 const corsOptions = { origin };
 
@@ -27,11 +30,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/", routes);
 
-// async  function dotit () {
-//   console.log("done")
-//   await createUser("bob2", "bob@bob.com", "abc123");
-// } 
-// dotit();
-app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+
+
+async function run() {
+  initModels(db)
+  await db.sync()
+  
+  // await User.sync({ alter: true });
+  // await UrlModel.sync({ alter: true });
+  // await Token.sync({ alter: true });
+
+  app.listen(port, () => {
+    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+  });
+ 
+}
+
+run();
+
+
