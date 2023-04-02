@@ -41,7 +41,7 @@ export const createNewURL = async (longURL: string, userId: number): Promise<IUR
   const newURL: IURLModel | null = await { 
     shortenedURL : newShortURLId,
     longURL: longURL,
-    userID: userId,
+    user_id: userId,
     createdAt: await moment().format('MMMM Do YYYY'),
   };
 
