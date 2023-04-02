@@ -1,19 +1,40 @@
-import User from "../models/userModels";
-import ShortURL from "../models/URLModels";
-
-User.hasMany(ShortURL,{
-  foreignKey:'user_id',
-  sourceKey:'id'
-});
-
-ShortURL.belongsTo(User,{
-  foreignKey:'user_id',
-  targetKey:'id'
-});
-
-User.sync({ alter: true })
+import type { Sequelize, Model } from 'sequelize'
+import { User } from './User'
+import { UrlModel } from './UrlModel'
+import { Token } from './Token'
 
 export {
   User,
-  ShortURL
-};
+  UrlModel,
+  Token
+}
+
+export function initModels(sequelize: Sequelize) {
+  User.initModel(sequelize)
+  UrlModel.initModel(sequelize)
+  Token.initModel(sequelize)
+
+  User.hasMany(UrlModel, {
+    as: 'urlModels',
+    foreignKey: 'user_id'
+  })
+  User.hasMany(Token, {
+    as: 'tokens',
+    foreignKey: 'user_id'
+  })
+  UrlModel.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id'
+  })
+  Token.belongsTo(User, {
+    as: 'user',
+    foreignKey: 'user_id'
+  })
+
+  return {
+    User,
+    UrlModel,
+    Token
+  }
+}
+
