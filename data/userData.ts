@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { users } from "../databases/userModelSeed";
+import User from "../models/userModels";
 import { IUserModel } from "../types/user";
 /**
  * Function to used to create a new user
@@ -9,7 +10,7 @@ import { IUserModel } from "../types/user";
  * @param {string} password
  * @returns {array} enters the new user into the database
  */
-export const createUser = async (name: string, email:string, password: string): Promise<IUserModel | boolean> => {
+export const createUserMock = async (name: string, email:string, password: string): Promise<IUserModel | boolean> => {
   let newUser: IUserModel | null = { 
   
     name: name, 
@@ -22,6 +23,25 @@ export const createUser = async (name: string, email:string, password: string): 
     await console.log("CREATED NEW USER", newUser);
     return newUser;
     // return true;
+  }
+  return false;
+};
+
+export const createUser = async (name: string, email: string, password: string): Promise<IUserModel | boolean> => {
+  
+  let newUser: any = { 
+    name: name, 
+    email: email, 
+    password: await bcrypt.hashSync(password, 10)
+  };
+  if (newUser) {
+    // await users.push(...users, newUser);
+    await console.log("CREATED NEW DB", users);
+    await console.log("CREATED NEW USER", newUser);
+
+    const createdUser: any = await User.create(newUser);
+    console.log("created user", createdUser);
+    return true;
   }
   return false;
 };
