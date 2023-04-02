@@ -7,7 +7,7 @@ import logger from "morgan";
 import cors from "cors";
 import { routes } from './routes';
 
-import User from "./models/userModels";
+import { User } from "./models";
 import { createUser } from "./data/userData";
 dotenv.config();
 
@@ -28,9 +28,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/", routes);
 
 // async  function dotit () {
-//   await createUser("bob", "bob@bob.com", "abc123");
+//   console.log("done")
+//   await createUser("bob2", "bob@bob.com", "abc123");
 // } 
-// dotit()
+// dotit();
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });
