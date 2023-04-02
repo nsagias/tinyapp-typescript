@@ -45,8 +45,8 @@ userRoute.get("/register", async (req: Request, res: Response) => {
     } else  {
 
       // create new user
-      const newUser = await createUser(parsedName, parsedEmail, parsedPassword);
-      console.log("NEW USER", newUser);
+      // const newUser = await createUser(parsedName, parsedEmail, parsedPassword);
+      // console.log("NEW USER", newUser);
 
       // fiuser by email
       
