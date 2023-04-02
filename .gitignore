@@ -27,3 +27,5 @@ notes.md
 
 .env
 dist/
+
+config.js
