@@ -93,5 +93,6 @@ User.init({
 
 // User.hasMany(ShortURL)
 
+
 export default User;
 
