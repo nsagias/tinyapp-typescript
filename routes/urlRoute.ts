@@ -22,8 +22,9 @@ urlRoute.get("/u/:shortenedURL", async (req: Request, res: Response) => {
     // extend and update with a count
     
     // TODO: add DTO
+    // TODO: add if or throw error
     const userRequestURL = longURLData[0].longURL;
-    res.redirect(userRequestURL);
+    res.redirect(userRequestURL!);
 
   } catch (error: any) {
     console.error(error);
