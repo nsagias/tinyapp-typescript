@@ -1,9 +1,13 @@
-export interface IUserModel {
+export interface IUser {
   id?: number;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
   email?: string;
+  emailVerified?: Date;
   password?: string;
+  active?: boolean;
+  deletedAt?: Date | null;
   createdAt?: Date;
   updatedAt?: Date;
-  deletedAt?: Date;
 }
+
