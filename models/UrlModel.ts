@@ -85,11 +85,11 @@ export class UrlModel extends Model<
         allowNull: false
       },
       longUrl: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(128),
         allowNull: false
       },
       shortUrl: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(128),
         allowNull: false
       },
       count: {
