@@ -20,16 +20,17 @@ export class Token extends Model<
   InferCreationAttributes<Token, {omit: TokenAssociations}>
 > {
   declare id: CreationOptional<number>;
-  declare token: string;
-  declare refreshToken: string;
+  declare authToken: string;
+  declare refreshToken: string | null;
+  declare refreshedTokenAt: Date | null;
+  declare tokenIp: string | null;
   declare userId: string;
-  declare tokenIp: string;
   declare deletedAt: Date | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
   // Token belongsTo User
-  declare user?: NonAttribute<User>;
+  declare user?: NonAttribute<User>;;
   declare getUser: BelongsToGetAssociationMixin<User>;
   declare setUser: BelongsToSetAssociationMixin<User, number>;
   declare createUser: BelongsToCreateAssociationMixin<User>;
@@ -46,19 +47,20 @@ export class Token extends Model<
         autoIncrement: true,
         allowNull: false
       },
-      token: {
+      authToken: {
         type: DataTypes.STRING,
         allowNull: false
       },
       refreshToken: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
       },
-      userId: {
-        type: DataTypes.STRING,
-        allowNull: false
+      refreshedTokenAt: {
+        type: DataTypes.DATE
       },
       tokenIp: {
+        type: DataTypes.STRING
+      },
+      userId: {
         type: DataTypes.STRING,
         allowNull: false
       },
