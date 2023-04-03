@@ -36,7 +36,7 @@ userRoute.get("/register", async (req: Request, res: Response) => {
     if (parsedEmail === "" || parsedPassword === "" || parsedName === "") throw new Error("new_account_missing_information_2");
   
     // check if existing user
-    const userExist: IUser | boolean | null = await getUserByEmail(parsedEmail);
+    const userExist: IUser | null = await getUserByEmail(parsedEmail);
 
     if (userExist){
 
@@ -50,7 +50,7 @@ userRoute.get("/register", async (req: Request, res: Response) => {
 
       // fiuser by email
       
-      const newId: IUser | boolean | null = await getUserByEmail(parsedEmail);
+      const newId: IUser | null = await getUserByEmail(parsedEmail);
 
       if (!newId) throw new Error("User was not created")
       
