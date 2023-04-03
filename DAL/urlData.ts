@@ -15,7 +15,7 @@ export const getUrlsByUserId = async (userId: number): Promise<IUrlModel[]> => {
  * @param shotenedURLId
  * @returns 
  */
-export const getURLByShortenedURL = async (shotenedURLId: string) => {
+export const getUrlByShortUrl = async (shotenedURLId: string) => {
   return await urlData.filter((u: any) => u.shortenedURL === shotenedURLId);
 };
 
@@ -26,11 +26,11 @@ export const getURLByShortenedURL = async (shotenedURLId: string) => {
  * @param userId 
  * @returns 
  */
-export const createNewURL = async (longURL: string, userId: number): Promise<IUrlModel | string> => {
+export const createShortUrl = async (longURL: string, userId: number): Promise<IUrlModel | string> => {
   let newShortURLId = await idGenerator();
   
   // check if already exists before generatoring
-  const isExistingURL = await getURLByShortenedURL(newShortURLId);
+  const isExistingURL = await getUrlByShortUrl(newShortURLId);
 
   if (isExistingURL) {
     // existing call new url with 8 letter
@@ -62,7 +62,7 @@ export const createNewURL = async (longURL: string, userId: number): Promise<IUr
  * @param userId 
  * @returns {boolean}
  */
-export const getURLByLongName = async (longURL: string, userId: number): Promise<boolean> => {
+export const getUrlByLongUrl = async (longURL: string, userId: number): Promise<boolean> => {
   // get exiting urls for user
   const usersURLs =  await getUrlsByUserId(userId);
 
@@ -78,7 +78,7 @@ export const getURLByLongName = async (longURL: string, userId: number): Promise
 
 export const deleteByShortURLId = async (shortenedURLId:string, userId: number): Promise<boolean> => {
   // confirm existing url
-  const isExistingURL = await getURLByShortenedURL(shortenedURLId);
+  const isExistingURL = await getUrlByShortUrl(shortenedURLId);
 
   // if doesn't exist return true
   if (!isExistingURL || isExistingURL.length === 0) return true;
