@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createNewURL, deleteByShortURLId, getURLByLongName, getURLByShortenedURL, getUrlsByUserId }   from "../data/urlData";
+import { createNewURL, deleteByShortURLId, getURLByLongName, getURLByShortenedURL, getUrlsByUserId }   from "../DAL/urlData";
 
 export const urlRoute = Router();
 

@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { getUserByEmail } from "../data/userData";
+import { getUserByEmail } from "../DAL/userData";
 import { IUserModel } from "../types/user";
 import { checkPassword } from "../services/authService";
 

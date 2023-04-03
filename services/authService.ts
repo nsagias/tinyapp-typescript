@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { getUserByEmail } from "../data/userData";
+import { getUserByEmail } from "../DAL/userData";
 
 /**
  * Check password matches db
@@ -12,6 +12,7 @@ export const checkPassword = async (email: string, password: string): Promise<bo
   if (!user) {
     return false;
   }
+  // TODO: to put insisde function, security spec
   if (bcrypt.compareSync(password, user.password)) {
    return true; 
   }

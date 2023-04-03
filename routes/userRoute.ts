@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createUser, getUserByEmail } from "../data/userData";
+import { createUser, getUserByEmail } from "../DAL/userData";
 import { IUserModel } from "../types/user";
 
 export const userRoute = Router();
