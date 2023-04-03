@@ -1,26 +1,44 @@
 import bcrypt2 from "bcryptjs";
-import { IUserModel } from "../types/user";
+import { IUser } from "../types/user";
 
-export let users: IUserModel[] = [
+export let users: IUser[] = [
    {
     id: 1,
-    name: "red",
+    firstName: "red",
+    lastName: "example",
     email: "red@example.com",
-    password: bcrypt2.hashSync("abc123", 10)
+    emailVerified: new Date() as Date,
+    password: bcrypt2.hashSync("abc123", 10),
+    active: true,
+    deletedAt: null,
+    createdAt: new Date() as Date,
+    updatedAt: new Date() as Date,
   },
-   {
+     {
     id: 2,
-    name: "green",
+    firstName: "green",
+    lastName: "example",
     email: "green@example.com",
-    password: bcrypt2.hashSync("abc123", 10)
+    password: bcrypt2.hashSync("abc123", 10),
+    active: true,
+    deletedAt: null,
+    createdAt: new Date() as Date,
+    updatedAt: new Date() as Date,
   },
  {
     id: 3, 
-    name: "blue",
+    firstName: "blue",
+    lastName: "example",
     email: "blue@example.com",
-    password: bcrypt2.hashSync("abc123", 10)
+    password: bcrypt2.hashSync("abc123", 10),
+    active: true,
+    deletedAt: null,
+    createdAt: new Date() as Date,
+    updatedAt: new Date() as Date,
   }
 ];
+
+
 
 
 import {
@@ -56,7 +74,7 @@ export class User extends Model<
   declare firstName: string;
   declare lastName: string;
   declare email: string;
-  declare emailVerified: string;
+  declare emailVerified: Date | null;
   declare password: string;
   declare active: boolean;
   declare deletedAt: Date | null;
