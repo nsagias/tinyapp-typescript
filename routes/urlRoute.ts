@@ -1,29 +1,31 @@
 import { Router, Request, Response } from "express";
-import { createShortUrl, deleteByShortUrlId, getUrlByLongUrl, getUrlByShortUrl, getUrlsByUserId }   from "../DAL/urlData";
+import { createShortUrl, deleteByShortUrl, getUrlByShortUrl, getUrlByLongUrl, getUrlsByUserId, updateUrlById }   from "../DAL/urlData";
+import { UrlModel } from "../models";
 
 export const urlRoute = Router();
 
 /**
- * Redirect to desired website
+ * Redirect redirect by shortUrl
  */
-urlRoute.get("/u/:shorUrl", async (req: Request, res: Response) => {
+urlRoute.get("/:shortUrl", async (req: Request, res: Response) => {
   try {
-    const shortenedURL = req.params && req.params.shortenedURL || null;
-    if (!shortenedURL) {
+
+    const shortUrl = req.params && req.params.shortUrl || null;
+
+    if (!shortUrl) {
       throw new Error("please provide shortened Url")
     }
+
     // receives a shoten url from an anonymous user
-    const longUrlData: any  = await getUrlByShortUrl(shortenedURL)
-    if (!longUrlData) {
-      throw new Error("URL does not exist")
-    }
-    console.log("LOONG URL DATA")
-    // extend and update with a count
+    const longUrlData: UrlModel  = await getUrlByShortUrl(shortUrl) as UrlModel;
+
+    // check if url exist
+    if (!longUrlData) throw new Error("URL does not exist")
     
-    // TODO: add DTO
-    // TODO: add if or throw error
-    // const userRequestURL = longURLData[0].longUrl;
-    // res.redirect(userRequestURL!);
+    // update count + 1
+    await updateUrlById(longUrlData.id, { count: longUrlData.count + 1 });
+    
+    res.redirect(longUrlData.longUrl);
 
   } catch (error: any) {
     console.error(error);
@@ -124,7 +126,7 @@ urlRoute.get("/url/delete/:shortUrlId", async (req: Request, res: Response) => {
     if (!shortURLId)  throw new Error("please provide shortened Url");
     if (!userId) throw new Error("please authenticate");
 
-    const isDeleted = await deleteByShortUrlId(shortURLId, userId);
+    const isDeleted = await deleteByShortUrl(shortURLId, userId);
 
     if (isDeleted) return res.json({ message: true});
     
