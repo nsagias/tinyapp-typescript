@@ -21,6 +21,24 @@ export const getUrlByShortUrl = async (shortUrl: string) => {
 };
 
 
+/**
+ * Get url by long name
+ * @param longURL 
+ * @param userId 
+ * @returns {boolean}
+ */
+export const getUrlByLongUrl = async (userId: string, longUrl: string): Promise<boolean> => { 
+  const existingUrl = await UrlModel.findOne({ 
+    where : { 
+      userId, 
+      longUrl, 
+      deletedAt: {[Op.eq]: null }
+      } 
+  });
+  // return true if existing
+  if(existingUrl) return true;
+  return false;
+};
 
 
 /**
@@ -50,54 +68,14 @@ export const createShortUrl = async (longUrl: string, userId: string): Promise<U
   const createdNewUrl = await UrlModel.create(newUrl);
 
   if (createdNewUrl) return createdNewUrl;
-
   return null;
 };
 
 
-/**
- * Get url by long name
- * @param longURL 
- * @param userId 
- * @returns {boolean}
- */
-export const getUrlByLongUrlMock = async (longURL: string, userId: string): Promise<boolean> => {
-  // get exiting urls for user
-  const usersURLs =  await getUrlsByUserId(userId);
-
-  // filter if exiting urls exist for user
-  const existingURL = usersURLs && usersURLs.length > 0 && usersURLs.filter(u => u.longUrl  === longURL).length > 0;
-  
-  // return true if existing
-  if(existingURL) return true;
-
-  return false;
-};
-
-/**
- * Get url by long name
- * @param longURL 
- * @param userId 
- * @returns {boolean}
- */
-export const getUrlByLongUrl = async (userId: string, longUrl: string): Promise<boolean> => {
-  // get exiting urls for user
-  const usersURLs =  await getUrlsByUserId(userId);
-  
-  const existingUrl = await UrlModel.findOne({ 
-    where : { 
-      userId, 
-      longUrl, 
-      deletedAt: {[Op.eq]: null }
-      } 
-  });
-  // return true if existing
-  if(existingUrl) return true;
-  return false;
-};
 
 
-export const deleteByShortUrlId = async (shortenedUrlId:string, userId: number): Promise<boolean> => {
+
+export const deleteByShortUrlId = async (shortenedUrlId:string, userId: string): Promise<boolean> => {
   // confirm existing url
   const isExistingURL: any = await getUrlByShortUrl(shortenedUrlId);
 
