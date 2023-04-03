@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { Op } from "sequelize";
 import { User } from "../models";
 import { IUser } from "../types/user";
 
@@ -25,7 +26,7 @@ export const createUser = async (firstName: string, lastName: string, email: str
  * @param isActive 
  * @returns 
  */
-export const getUserById = async (id: number, deletedDate: Date | undefined = undefined, isActive: boolean = true ): Promise<IUser | null> => {
+export const getUserById = async (id: number, deletedDate: Date | null = null, isActive: boolean = true ): Promise<IUser | null> => {
   return await User.findOne({ where: { id, deletedAt: deletedDate, active: isActive } });
 };
 
@@ -36,7 +37,7 @@ export const getUserById = async (id: number, deletedDate: Date | undefined = un
  * @param isActive 
  * @returns 
  */
-export const getUserByEmail = async (email: string, deletedDate: Date | undefined = undefined, isActive: boolean = true): Promise<IUser | null> => {
+export const getUserByEmail = async (email: string, deletedDate: Date | null = null, isActive: boolean = true): Promise<IUser | null> => {
   return await User.findOne({ where: { email, deletedAt: deletedDate, active: isActive  } });
 };
 
@@ -60,10 +61,19 @@ export const updateUserById = async (id: number, values: Partial<IUser>): Promis
 
 /**
  * 
- * @param deletedDate 
- * @param isActive 
+ * @param showActive 
+ * @param showDeleted 
  * @returns 
+ * showActive true and showDeleted false, shows only active (default setting)
+ * showActice false and showDeleted false, shows everything
+ * showActive true and showDeleted true, shows nothing
+ * showActive false and showDeleted true, shows only deleted
  */
-export const getAllUsers = async (deletedDate: Date | undefined = undefined, isActive: boolean = true) => {
-  return await User.findAll({where: { deletedAt: deletedDate, active: isActive }});
+export const getAllUsers = async (showActive: boolean = true, showDeleted: boolean = false) => {
+  let query: any = { where : {}};
+  if (showActive) query.where.active = showActive;
+  if (showDeleted) query.where.deletedAt = { [Op.ne]: null };
+
+
+  return await User.findAll(query);
 };
