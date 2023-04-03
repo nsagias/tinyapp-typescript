@@ -47,7 +47,7 @@ export const getUserByEmail = async (email: string, deletedDate: Date | undefine
  * @param values 
  * @returns 
  */
-export const updateById = async (id: number, values: Partial<IUser>): Promise<boolean>  => {
+export const updateUserById = async (id: number, values: Partial<IUser>): Promise<boolean>  => {
   const user = await User.findByPk(id);
   if (!user) return false;
 
