@@ -40,7 +40,6 @@ export let users: IUser[] = [
 
 
 
-
 import {
   Association,
   CreationOptional,
@@ -74,10 +73,10 @@ export class User extends Model<
   declare firstName: string;
   declare lastName: string;
   declare email: string;
-  declare emailVerified: Date | null;
+  declare emailVerified: CreationOptional<Date | null>;
   declare password: string;
   declare active: boolean;
-  declare deletedAt: Date | null;
+  declare deletedAt: CreationOptional<Date | null>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
