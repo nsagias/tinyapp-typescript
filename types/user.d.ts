@@ -3,7 +3,7 @@ export interface IUser {
   firstName?: string;
   lastName?: string;
   email?: string;
-  emailVerified?: Date;
+  emailVerified?: Date | null;
   password?: string;
   active?: boolean;
   deletedAt?: Date | null;
