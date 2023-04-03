@@ -8,8 +8,6 @@ import cors from "cors";
 import { routes } from './routes';
 import db from "./databases/sequelize/db";
 import { initModels } from './models'
-
-
 import { Token, UrlModel, User } from "./models";
 
 dotenv.config();
