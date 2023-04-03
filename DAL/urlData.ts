@@ -6,61 +6,20 @@ import { idGenerator } from "../services/utilsService";
  * Get urls by user id
  * @returns all urls for a user
  */
-export const getUrlsByUserIdMock = async (userId: number): Promise<IUrlModel[]> => {
-  return await urlData.filter((u: any) => u.userID === userId);
-};
-export const getUrlsByUserId = async (userId: number): Promise<UrlModel[]> => {
+export const getUrlsByUserId = async (userId: string): Promise<UrlModel[]> => {
   return await UrlModel.findAll({ where : { userId } });
 };
 
+
 /**
- * Get url by shortend name
- * @param shotenedURLId
+ * 
+ * @param shortUrl 
  * @returns 
  */
-export const getUrlByShortUrlMock = async (shotenedURLId: string) => {
-  return await urlData.filter((u: any) => u.shortenedURL === shotenedURLId);
-};
-
 export const getUrlByShortUrl = async (shortUrl: string) => {
   return await UrlModel.findOne({ where : { shortUrl } });
 };
 
-
-/**
- * Create new short url for user
- * @param longURL 
- * @param userId 
- * @returns 
- */
-export const createShortUrlMock = async (longURL: string, userId: number): Promise<IUrlModel | string> => {
-  let newShortURLId = await idGenerator();
-  
-  // check if already exists before generatoring
-  const isExistingURL = await getUrlByShortUrl(newShortURLId);
-
-  if (isExistingURL) {
-    // existing call new url with 8 letter
-    newShortURLId = await idGenerator(8);
-  }
-
-  const newURL: IUrlModel | null = await { 
-    shortUrl : newShortURLId,
-    longUrl: longURL,
-    userId: userId
-  };
-
-  if (newURL) {
-    // TODO: replace with real db
-    urlData.push(newURL);
-    console.log("CREATED SHORT URL", newURL);
-    console.log("CREATED NEW URL DATA", urlData);
-    return newURL;
-    // // return true;
-  }
-  // return false;
-  return "failed to create new url";
-};
 
 /**
  * Create new short url for user
@@ -86,16 +45,10 @@ export const createShortUrl = async (longUrl: string, userId: string): Promise<U
     userId
   } as UrlModel;
 
-  
-  console.log("NEW URL TO BE CREATED", newUrl);
-
   const createdNewUrl = await UrlModel.create(newUrl);
 
-  if (createdNewUrl) {
-    console.log("CREATED NEW URL", createdNewUrl )
-    return createdNewUrl;
-  }
-    
+  if (createdNewUrl) return createdNewUrl;
+
   return null;
 };
 
@@ -106,7 +59,7 @@ export const createShortUrl = async (longUrl: string, userId: string): Promise<U
  * @param userId 
  * @returns {boolean}
  */
-export const getUrlByLongUrl = async (longURL: string, userId: number): Promise<boolean> => {
+export const getUrlByLongUrl = async (longURL: string, userId: string): Promise<boolean> => {
   // get exiting urls for user
   const usersURLs =  await getUrlsByUserId(userId);
 
