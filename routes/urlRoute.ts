@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createShortUrl, deleteByShortURLId, getUrlByLongUrl, getUrlByShortUrl, getUrlsByUserId }   from "../DAL/urlData";
+import { createShortUrl, deleteByShortUrlId, getUrlByLongUrl, getUrlByShortUrl, getUrlsByUserId }   from "../DAL/urlData";
 
 export const urlRoute = Router();
 
@@ -13,17 +13,17 @@ urlRoute.get("/u/:shorUrl", async (req: Request, res: Response) => {
       throw new Error("please provide shortened Url")
     }
     // receives a shoten url from an anonymous user
-    const longURLData = await getUrlByShortUrl(shortenedURL)
-    if (!longURLData) {
+    const longUrlData: any  = await getUrlByShortUrl(shortenedURL)
+    if (!longUrlData) {
       throw new Error("URL does not exist")
     }
-    
+    console.log("LOONG URL DATA")
     // extend and update with a count
     
     // TODO: add DTO
     // TODO: add if or throw error
-    const userRequestURL = longURLData[0].longUrl;
-    res.redirect(userRequestURL!);
+    // const userRequestURL = longURLData[0].longUrl;
+    // res.redirect(userRequestURL!);
 
   } catch (error: any) {
     console.error(error);
@@ -70,7 +70,7 @@ urlRoute.get("/url/:shortUrl", async (req: Request, res: Response) => {
     
     // receives a shoten url from an anonymous user
     const longURLData = await getUrlByShortUrl(shortenedURL)
-    if (!longURLData  || !(longURLData.length > 0)) throw new Error("URL does not exist");
+    if (!longURLData) throw new Error("URL does not exist");
         
     // TODO: add DTO
     res.json({ message: "success", data: longURLData});
@@ -124,7 +124,7 @@ urlRoute.get("/url/delete/:shortUrlId", async (req: Request, res: Response) => {
     if (!shortURLId)  throw new Error("please provide shortened Url");
     if (!userId) throw new Error("please authenticate");
 
-    const isDeleted = await deleteByShortURLId(shortURLId, userId);
+    const isDeleted = await deleteByShortUrlId(shortURLId, userId);
 
     if (isDeleted) return res.json({ message: true});
     

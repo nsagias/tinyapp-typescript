@@ -9,7 +9,8 @@ import { routes } from './routes';
 import db from "./databases/sequelize/db";
 import { initModels } from './models'
 import { Token, UrlModel, User } from "./models";
-import { createUser, getUserByEmail } from "./DAL/userData";
+import { createUser, getAllUsers, getUserByEmail } from "./DAL/userData";
+import { createShortUrl, getUrlByShortUrl, getUrlsByUserId } from "./DAL/urlData";
 
 dotenv.config();
 
@@ -44,6 +45,15 @@ async function run() {
   // console.log("MY NEW USER",  user);
   // const findUser = await getUserByEmail("myEmail@anyemail.com");
   // console.log("FIND USER BY EMAIL", findUser);
+  // const allUsers  = await getAllUsers();
+  // console.log("GET ALL USERS", allUsers);
+  // const newShortUrl = await createShortUrl("www.bob.com", "3")
+  // console.log("NEW Short url", newShortUrl);
+  // createShortUrl = async (longUrl: string, userId: string)
+  // const getShortURL = await getUrlByShortUrl("843624");
+  // console.log("GET SHORT URL", getShortURL);
+  const getURLsByUserId = await getUrlsByUserId("3");
+  console.log("GET URLS BY USER ID", getURLsByUserId);
 
   app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
