@@ -1,18 +1,28 @@
-import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
 import { User } from "../models";
 import { IUser } from "../DAL/types/user";
+import { hashPassword } from "../services/authService";
 
 
-export const createUser = async (firstName: string, lastName: string, email: string, password: string, active: boolean): Promise<IUser | boolean> => {
+/**
+ * Create new user
+ * @param firstName 
+ * @param lastName 
+ * @param email 
+ * @param password 
+ * @param active 
+ * @returns created user object or null
+ */
+export const createUser = async (firstName: string, lastName: string, email: string, password: string, active: boolean): Promise<IUser | null> => {
   
+  const hashedPassword = await hashPassword(password);
+
   const newUser = {
     firstName,
     lastName,
     email,
-    password: bcrypt.hashSync(password, 10),
+    password: hashedPassword,
     active,
-    deletedAt: new Date()
   } as User;
 
   return await User.create(newUser);  
@@ -20,22 +30,22 @@ export const createUser = async (firstName: string, lastName: string, email: str
 
 
 /**
- * 
+ * Get User by primary key
  * @param id 
  * @param deletedDate 
  * @param isActive 
- * @returns 
+ * @returns single user object or null
  */
 export const getUserById = async (id: number, deletedDate: Date | null = null, isActive: boolean = true ): Promise<IUser | null> => {
   return await User.findOne({ where: { id, deletedAt: deletedDate, active: isActive } });
 };
 
 /**
- * 
+ * Get user by email
  * @param email 
  * @param deletedDate 
  * @param isActive 
- * @returns 
+ * @returns user object or null
  */
 export const getUserByEmail = async (email: string, deletedDate: Date | null = null, isActive: boolean = true): Promise<IUser | null> => {
   return await User.findOne({ where: { email, deletedAt: deletedDate, active: isActive  } });
@@ -43,10 +53,10 @@ export const getUserByEmail = async (email: string, deletedDate: Date | null = n
 
 
 /**
- * 
+ * Updates existing user
  * @param id 
  * @param values 
- * @returns 
+ * @returns boolean
  */
 export const updateUserById = async (id: number, values: Partial<IUser>): Promise<boolean>  => {
   const user = await User.findByPk(id);
@@ -60,10 +70,11 @@ export const updateUserById = async (id: number, values: Partial<IUser>): Promis
 
 
 /**
- * 
+ * Get all users
  * @param showActive 
  * @param showDeleted 
- * @returns 
+ * @returns a list of users
+ * 
  * showActive true and showDeleted false, shows only active (default setting)
  * showActice false and showDeleted false, shows everything
  * showActive true and showDeleted true, shows nothing
@@ -73,6 +84,6 @@ export const getAllUsers = async (showActive: boolean = true, showDeleted: boole
   let query: any = { where : {}};
   if (showActive) query.where.active = showActive;
   if (showDeleted) query.where.deletedAt = { [Op.ne]: null };
-  
+
   return await User.findAll(query);
 };
