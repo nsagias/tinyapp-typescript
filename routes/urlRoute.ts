@@ -23,7 +23,7 @@ urlRoute.get("/u/:shortenedURL", async (req: Request, res: Response) => {
     
     // TODO: add DTO
     // TODO: add if or throw error
-    const userRequestURL = longURLData[0].longURL;
+    const userRequestURL = longURLData[0].longUrl;
     res.redirect(userRequestURL!);
 
   } catch (error: any) {
