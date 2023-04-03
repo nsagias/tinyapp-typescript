@@ -1,5 +1,5 @@
-import { IUrlModel } from "../types/urlModel";
-import { urlData, UrlModel } from "../models/UrlModel";
+import { Op } from "sequelize";
+import { UrlModel } from "../models/UrlModel";
 import { idGenerator } from "../services/utilsService";
 
 /**
@@ -19,6 +19,8 @@ export const getUrlsByUserId = async (userId: string): Promise<UrlModel[]> => {
 export const getUrlByShortUrl = async (shortUrl: string) => {
   return await UrlModel.findOne({ where : { shortUrl } });
 };
+
+
 
 
 /**
@@ -59,7 +61,7 @@ export const createShortUrl = async (longUrl: string, userId: string): Promise<U
  * @param userId 
  * @returns {boolean}
  */
-export const getUrlByLongUrl = async (longURL: string, userId: string): Promise<boolean> => {
+export const getUrlByLongUrlMock = async (longURL: string, userId: string): Promise<boolean> => {
   // get exiting urls for user
   const usersURLs =  await getUrlsByUserId(userId);
 
@@ -69,6 +71,28 @@ export const getUrlByLongUrl = async (longURL: string, userId: string): Promise<
   // return true if existing
   if(existingURL) return true;
 
+  return false;
+};
+
+/**
+ * Get url by long name
+ * @param longURL 
+ * @param userId 
+ * @returns {boolean}
+ */
+export const getUrlByLongUrl = async (userId: string, longUrl: string): Promise<boolean> => {
+  // get exiting urls for user
+  const usersURLs =  await getUrlsByUserId(userId);
+  
+  const existingUrl = await UrlModel.findOne({ 
+    where : { 
+      userId, 
+      longUrl, 
+      deletedAt: {[Op.eq]: null }
+      } 
+  });
+  // return true if existing
+  if(existingUrl) return true;
   return false;
 };
 
