@@ -1,7 +1,6 @@
 import { IUrlModel } from "../types/urlModel";
 import { urlData } from "../models/UrlModel";
 import { idGenerator } from "../services/utilsService";
-import moment from "moment";
 
 /**
  * Get urls by user id
