@@ -1,6 +1,8 @@
+import { Console } from "console";
 import { Op } from "sequelize";
 import { UrlModel } from "../models/UrlModel";
 import { idGenerator } from "../services/utilsService";
+import { IUrlModel } from "./types/urlModel";
 
 /**
  * Get urls by user id
@@ -16,8 +18,13 @@ export const getUrlsByUserId = async (userId: string): Promise<UrlModel[]> => {
  * @param shortUrl 
  * @returns 
  */
-export const getUrlByShortUrl = async (shortUrl: string) => {
-  return await UrlModel.findOne({ where : { shortUrl } });
+export const getUrlByShortUrl = async (shortUrl: string): Promise<UrlModel | null> => {
+  return await UrlModel.findOne({ 
+    where : { 
+      shortUrl,
+      deletedAt: {[Op.eq]: null }
+    } 
+  });
 };
 
 
@@ -72,32 +79,43 @@ export const createShortUrl = async (longUrl: string, userId: string): Promise<U
 };
 
 
+/**
+ * 
+ * @param id 
+ * @param values
+ * @returns boolean
+ */
+export const updateUrlById = async (id: number, values: Partial<UrlModel>): Promise<boolean>  => {
+  const user = await UrlModel.findByPk(id);
+  if (!user) return false;
+ 
+  await user.set(values);
+  await user.save();
+ 
+  return true;
+ };
 
 
+/**
+ * 
+ * @param shortUrl 
+ * @param userId 
+ * @returns 
+ */
+export const deleteByShortUrl = async (shortUrl:string, userId: string): Promise<boolean> => {
 
-export const deleteByShortUrlId = async (shortenedUrlId:string, userId: string): Promise<boolean> => {
   // confirm existing url
-  const isExistingURL: any = await getUrlByShortUrl(shortenedUrlId);
+  const existingUrl: UrlModel | null = await getUrlByShortUrl(shortUrl);
+  console.log("EXISTING URL", existingUrl);
 
   // if doesn't exist return true
-  if (!isExistingURL || !(isExistingURL.length > 0)) return true;
-
-  // const isOwnedByLoggedInUser = isExistingURL[0].userId === userId;
-  // if (!isOwnedByLoggedInUser) throw new Error("not own by user");
-
-  // console.log("IS OWNED BY LOGGED IN USER", isOwnedByLoggedInUser)
-
-  // if existing check belongs to user
-  // if (isExistingURL && isOwnedByLoggedInUser) {
-  if (isExistingURL) {
-    
-    // TODO: replace with real db
-    // const findData = await urlData.findIndex((u: any) => u.shortenedURL === shortenedURLId);
-    
-    // urlData.splice(findData, 1)
-    
-  
+ if ( existingUrl && existingUrl.userId.toString() === userId.toString()) {
+    await existingUrl.set( {deletedAt: new Date()} );
+    await existingUrl.save();
     return true;
   }
   return false;
 }
+
+
+
