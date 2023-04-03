@@ -70,7 +70,7 @@ export class UrlModel extends Model<
   declare shortUrl: string;
   declare count: number;
   declare userId: string;
-  declare deletedAt: Date | null;
+  declare deletedAt: CreationOptional<Date | null>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
