@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import { users } from "../databases/userModelSeed";
 import { User } from "../models";
 import { IUser } from "../types/user";
 

@@ -9,6 +9,7 @@ import { routes } from './routes';
 import db from "./databases/sequelize/db";
 import { initModels } from './models'
 import { Token, UrlModel, User } from "./models";
+import { createUser, getUserByEmail } from "./DAL/userData";
 
 dotenv.config();
 
@@ -37,6 +38,12 @@ async function run() {
   // await User.sync({ alter: true });
   // await UrlModel.sync({ alter: true });
   // await Token.sync({ alter: true });
+
+  // const user  = await createUser("myFirstName", "myLastName", "myEmail@anyemail.com", "abc123", true);
+  // const user  = await createUser("myDeleedUser", "myDeletedUser", "myDeletedUser@anyemail.com", "abc123", false);
+  // console.log("MY NEW USER",  user);
+  // const findUser = await getUserByEmail("myEmail@anyemail.com");
+  // console.log("FIND USER BY EMAIL", findUser);
 
   app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
