@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
 import { User } from "../models";
-import { IUser } from "../types/user";
+import { IUser } from "../DAL/types/user";
 
 
 export const createUser = async (firstName: string, lastName: string, email: string, password: string, active: boolean): Promise<IUser | boolean> => {
@@ -73,7 +73,6 @@ export const getAllUsers = async (showActive: boolean = true, showDeleted: boole
   let query: any = { where : {}};
   if (showActive) query.where.active = showActive;
   if (showDeleted) query.where.deletedAt = { [Op.ne]: null };
-
-
+  
   return await User.findAll(query);
 };
