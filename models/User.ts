@@ -53,9 +53,10 @@ export class User extends Model<
   InferCreationAttributes<User, {omit: UserAssociations}>
 > {
   declare id: CreationOptional<number>;
-  declare name: string;
+  declare firstName: string;
   declare lastName: string;
   declare email: string;
+  declare emailVerified: string;
   declare password: string;
   declare active: boolean;
   declare deletedAt: Date | null;
@@ -71,7 +72,7 @@ export class User extends Model<
   declare createUrlModel: HasManyCreateAssociationMixin<UrlModel>;
   declare removeUrlModel: HasManyRemoveAssociationMixin<UrlModel, number>;
   declare removeUrlModels: HasManyRemoveAssociationsMixin<UrlModel, number>;
-  declare hasUrlModel: HasManyHasAssociationMixin<UrlModel, number>;
+  declare hasUrlModel: HasManyHasAssociationMixin<UrlModel, number>
   declare hasUrlModels: HasManyHasAssociationsMixin<UrlModel, number>;
   declare countUrlModels: HasManyCountAssociationsMixin;
   
@@ -101,7 +102,7 @@ export class User extends Model<
         autoIncrement: true,
         allowNull: false
       },
-      name: {
+      firstName: {
         type: DataTypes.STRING(128),
         allowNull: false
       },
@@ -112,6 +113,9 @@ export class User extends Model<
       email: {
         type: DataTypes.STRING(128),
         allowNull: false
+      },
+      emailVerified: {
+        type: DataTypes.DATE
       },
       password: {
         type: DataTypes.STRING(128),
@@ -133,7 +137,7 @@ export class User extends Model<
     }, {
       sequelize
     })
-    
+
     return User;
   }
 }
