@@ -48,3 +48,24 @@ export const createAccessToken = async (user: any, ip: string ): Promise<IToken|
   // return created token
   return createdTokenRecord;
 };
+
+
+/**
+ * Updated token by id
+ * @param id 
+ * @param values 
+ * @returns updated tokenn
+ */
+export const updateTokenById = async (id: number, values: Partial<IToken>): Promise<IToken | null> => {
+  // find token by id
+  const token = await Token.findByPk(id);
+
+  // if not token return null
+  if (!token) return null;
+
+  // update and save new values
+  await token.set(values);
+  const updatedToken = await token.save();
+
+  return updatedToken;
+};
