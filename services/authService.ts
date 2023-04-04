@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+import jwt from 'jsonwebtoken';
 import { getUserByEmail } from "../DAL/userData";
-
-
-
+import { Sign } from "crypto";
+dotenv.config();
 
 /**
  * Password hashing function to encapsulate 
@@ -46,4 +47,22 @@ export const checkPassword = async (email: string, password: string): Promise<bo
 };
 
 
+/**
+ * Create as token
+ * @param user user object 
+ * @returns 
+ */
+export const createAccessToken = async (user: any ) => {
+  const authSecret = process.env.AUTH_SECRET || null;
+  const issuer = process.env.TOKEN_ISSUER || null;
 
+  if (!authSecret || !issuer) return null;
+
+  const token = await jwt.sign(user, authSecret, {
+    algorithm: "HS256",
+    issuer,
+    subject: user.id
+  });
+  
+  return token;
+};
