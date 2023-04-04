@@ -36,3 +36,37 @@ userRoute.get("/register", async (req: Request, res: Response) => {
  
 });
 
+
+
+// app.post
+userRoute.get("/login", async(req: Request, res: Response) => {
+  try {
+    // Check for body 
+    const email = "red@example.com";
+    const password = "abc123";
+    // const email = req.body && req.body.email || null;
+    // const password = req.body && req.body.password || null;
+ 
+    const parsedEmail = email && email.trim();
+    const parsedPassword = email && password.trim();
+
+    if (!parsedEmail || !parsedPassword) throw new Error("Login error");
+    
+    // login section
+    return await login(parsedEmail, parsedPassword);
+        
+  } catch (error: any) {
+      console.error("ERROR",error);
+      return res.json({ message: "login error"})
+  }
+});
+
+/**
+ * Logout
+ */
+userRoute.post("/logout", async (req: Request, res: Response) => {
+  // const token = req.body && req.body.token || null;
+  // find token and logout token
+
+  res.json({ message: "logout route"})
+});
