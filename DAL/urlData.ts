@@ -12,9 +12,9 @@ export const getUrlsByUserId = async (userId: string): Promise<UrlModel[]> => {
 
 
 /**
- * 
+ * Get long url by searching with the short url
  * @param shortUrl 
- * @returns 
+ * @returns https:// route
  */
 export const getUrlByShortUrl = async (shortUrl: string): Promise<UrlModel | null> => {
   return await UrlModel.findOne({ 
@@ -78,7 +78,7 @@ export const createShortUrl = async (longUrl: string, userId: string): Promise<U
 
 
 /**
- * 
+ * Update url by finding by id and passing updated values
  * @param id 
  * @param values
  * @returns boolean
@@ -95,7 +95,7 @@ export const updateUrlById = async (id: number, values: Partial<UrlModel>): Prom
 
 
 /**
- * 
+ * Find by shortUrl and add date to deleted
  * @param shortUrl 
  * @param userId 
  * @returns 
