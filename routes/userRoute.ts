@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createUser, getUserByEmail } from "../DAL/userData";
-import { IUser } from "../DAL/types/user";
+import { createAndLoginUser, login } from "../services/authService";
 
 export const userRoute = Router();
 
@@ -24,34 +23,16 @@ userRoute.get("/register", async (req: Request, res: Response) => {
     const parsedFirstName = firstName && firstName.trim();
     const parsedLastName = lastName && lastName.trim();
 
-    // TODO: add min legnth
-    if (!parsedEmail || !parsedPassword || !parsedFirstName || !parsedLastName) throw new Error("new_account_missing_information");
-  
-    // check if existing user
-    const userExist: IUser | null = await getUserByEmail(parsedEmail);
-
-    if (userExist) {
-      await res.json({ message: "existing email on file"});
-
-    } else  {
-
-      // create new user
-      const newUser = await createUser(parsedFirstName, parsedLastName ,parsedEmail, parsedPassword);
-      // check if user was created
-      if (!newUser) throw new Error("User was not created")
-      
-      // set token/cookie to new user id
-      // token string to get created here
-      // await res.cookie("userID", newId);
-
-      // return new user data 
-      // TODO: add DTO
-      await res.json({ firstName: newUser.firstName,  lastName: newUser.lastName, isActive: newUser.active, token: "token string to go here"});
-    }
+    if (!parsedFirstName || !parsedLastName  || !parsedEmail || !parsedPassword ) throw new Error("new_account_missing_information");
+    const token = await createAndLoginUser(parsedFirstName, parsedLastName, parsedEmail, parsedPassword);
+   
+    if (!token) throw new Error("account creation error");
+    return token;
         
   } catch (error: any) {
       console.error("ERROR",error);
       return res.json({ message: "account creation error"})
-  }
+  };
  
 });
+
