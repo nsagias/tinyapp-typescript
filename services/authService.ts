@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from 'jsonwebtoken';
+import { IUser } from "../DAL/types/user";
 import { getUserByEmail } from "../DAL/userData";
 dotenv.config();
 
@@ -64,4 +65,27 @@ export const createAccessToken = async (user: any ) => {
   });
 
   return token;
+};
+
+
+/**
+ * 
+ * @param email 
+ * @param password 
+ * @returns 
+ */
+export const login = async (email: string, password: string) => {
+
+    // login section
+    const user: IUser | null = await getUserByEmail(email);
+    console.log("*USER",user);
+
+    if (!user) return null;
+
+    const userAuth: boolean = await checkPassword(email, password);
+    console.log("***Auth:", userAuth);
+
+    if (userAuth) return createAccessToken(user);
+    
+    return null;
 };
