@@ -1,8 +1,6 @@
-import { Console } from "console";
 import { Op } from "sequelize";
 import { UrlModel } from "../models/UrlModel";
 import { idGenerator } from "../services/utilsService";
-import { IUrlModel } from "./types/urlModel";
 
 /**
  * Get urls by user id
@@ -106,16 +104,12 @@ export const deleteByShortUrl = async (shortUrl:string, userId: string): Promise
 
   // confirm existing url
   const existingUrl: UrlModel | null = await getUrlByShortUrl(shortUrl);
-  console.log("EXISTING URL", existingUrl);
-
+ 
   // if doesn't exist return true
- if ( existingUrl && existingUrl.userId.toString() === userId.toString()) {
+  if ( existingUrl && existingUrl.userId.toString() === userId.toString()) {
     await existingUrl.set( {deletedAt: new Date()} );
     await existingUrl.save();
     return true;
   }
   return false;
-}
-
-
-
+};
