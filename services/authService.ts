@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from 'jsonwebtoken';
 import { IUser } from "../DAL/types/user";
-import { getUserByEmail } from "../DAL/userData";
+import { createUser, getUserByEmail } from "../DAL/userData";
 dotenv.config();
 
 /**
@@ -69,23 +69,45 @@ export const createAccessToken = async (user: any ) => {
 
 
 /**
- * 
+ * Login user
  * @param email 
  * @param password 
- * @returns 
+ * @returns token or null
  */
 export const login = async (email: string, password: string) => {
+  // login section
+  const user: IUser | null = await getUserByEmail(email);
+  console.log("*USER",user);
 
-    // login section
-    const user: IUser | null = await getUserByEmail(email);
-    console.log("*USER",user);
+  if (!user) return null;
 
-    if (!user) return null;
+  const userAuth: boolean = await checkPassword(email, password);
+  console.log("***Auth:", userAuth);
 
-    const userAuth: boolean = await checkPassword(email, password);
-    console.log("***Auth:", userAuth);
+  if (userAuth) return createAccessToken(user);
+  
+  return null;
+};
 
-    if (userAuth) return createAccessToken(user);
+
+/**
+ * Create and login user
+ * @param firstName 
+ * @param lastName 
+ * @param email 
+ * @param password 
+ * @returns token or null
+ */
+export const createAndLoginUser = async (firstName: string, lastName: string, email: string, password: string) => {
+  // check if existing user
+  const userExist: IUser | null = await getUserByEmail(email);
+
+  if (!userExist) return null;
     
-    return null;
+  // create new user
+  const newUser = await createUser(firstName, lastName, email, password);
+
+  if (!newUser) return null;
+
+  return await login(email, password);
 };
