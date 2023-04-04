@@ -10,7 +10,8 @@ import db from "./databases/sequelize/db";
 import { initModels } from './models'
 import { Token, UrlModel, User } from "./models";
 import { createUser, getAllUsers, getUserByEmail } from "./DAL/userData";
-import { createShortUrl, getUrlByShortUrl, getUrlsByUserId } from "./DAL/urlData";
+import { createShortUrl, deleteByShortUrl, getUrlByLongUrl, getUrlByShortUrl, getUrlsByUserId } from "./DAL/urlData";
+import { stringify } from "querystring";
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ const port = parseInt(process.env.PORT || '3001');
 const origin: string | undefined = process.env.corsOptions;
 const corsOptions = { origin };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,6 +41,7 @@ async function run() {
   // await UrlModel.sync({ alter: true });
   // await Token.sync({ alter: true });
 
+// users
   // const user  = await createUser("myFirstName", "myLastName", "myEmail@anyemail.com", "abc123", true);
   // const user  = await createUser("myDeleedUser", "myDeletedUser", "myDeletedUser@anyemail.com", "abc123", false);
   // console.log("MY NEW USER",  user);
@@ -50,10 +52,19 @@ async function run() {
   // const newShortUrl = await createShortUrl("www.bob.com", "3")
   // console.log("NEW Short url", newShortUrl);
   // createShortUrl = async (longUrl: string, userId: string)
+
+// urls
   // const getShortURL = await getUrlByShortUrl("843624");
   // console.log("GET SHORT URL", getShortURL);
-  const getURLsByUserId = await getUrlsByUserId("3");
-  console.log("GET URLS BY USER ID", getURLsByUserId);
+
+  // const getURLsByUserId = await getUrlsByUserId("3");
+  // console.log("GET URLS BY USER ID", getURLsByUserId);
+
+  // const getbyLongUrl = await getUrlByLongUrl("1", "www.bob0.com")
+  // console.log("GET URL BY LONG URL<BOOLEAN>",getbyLongUrl);
+
+  //  const isDeleted = await deleteByShortUrl("c7af2b", "1");
+  //  console.log("IS DELETED",isDeleted);
 
   app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { getUserByEmail } from "../DAL/userData";
-import { IUserModel } from "../types/user";
+import { IUser } from "../DAL/types/user";
 import { checkPassword } from "../services/authService";
 
 export const loginRoute = Router();
@@ -27,7 +27,7 @@ loginRoute.get("/login", async(req: Request, res: Response) => {
       throw new Error("missing_email_or_password_2");
     }
 
-    const user: IUserModel | boolean = await getUserByEmail( parsedEmail || "red@example.com");
+    const user: IUser | null = await getUserByEmail( parsedEmail || "red@example.com");
     console.log("*USER",user);
 
     const userAuth: boolean = await checkPassword(parsedEmail || "red@example.com", parsedPassword || "abc123");

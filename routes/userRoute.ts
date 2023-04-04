@@ -4,14 +4,6 @@ import { IUser } from "../DAL/types/user";
 
 export const userRoute = Router();
 
-// http://localhost:3001/users/1/?page=1&limit=10&search=:search
-userRoute.get("/users/:userId", (req: Request, res: Response) => {
-  console.log("REQ.PARAM",req.params);
-  console.log("REQ.QUERY",req.query);
-  res.send("user");
-});
-
-
 // userRoute.post
 userRoute.get("/register", async (req: Request, res: Response) => {
   try {

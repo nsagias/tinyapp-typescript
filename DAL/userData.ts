@@ -10,10 +10,9 @@ import { hashPassword } from "../services/authService";
  * @param lastName 
  * @param email 
  * @param password 
- * @param active 
  * @returns created user object or null
  */
-export const createUser = async (firstName: string, lastName: string, email: string, password: string, active: boolean): Promise<IUser | null> => {
+export const createUser = async (firstName: string, lastName: string, email: string, password: string): Promise<IUser | null> => {
   
   const hashedPassword = await hashPassword(password);
 
@@ -22,7 +21,7 @@ export const createUser = async (firstName: string, lastName: string, email: str
     lastName,
     email,
     password: hashedPassword,
-    active,
+    active: true
   } as User;
 
   return await User.create(newUser);  
