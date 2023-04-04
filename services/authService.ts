@@ -2,7 +2,6 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from 'jsonwebtoken';
 import { getUserByEmail } from "../DAL/userData";
-import { Sign } from "crypto";
 dotenv.config();
 
 /**
@@ -50,7 +49,7 @@ export const checkPassword = async (email: string, password: string): Promise<bo
 /**
  * Create as token
  * @param user user object 
- * @returns 
+ * @returns token
  */
 export const createAccessToken = async (user: any ) => {
   const authSecret = process.env.AUTH_SECRET || null;
@@ -63,6 +62,6 @@ export const createAccessToken = async (user: any ) => {
     issuer,
     subject: user.id
   });
-  
+
   return token;
 };
