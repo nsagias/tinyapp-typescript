@@ -98,11 +98,11 @@ export const login = async (email: string, password: string) => {
  * @param password 
  * @returns token or null
  */
-export const createAndLoginUser = async (firstName: string, lastName: string, email: string, password: string) => {
+export const createAndLoginUser = async(firstName: string, lastName: string, email: string, password: string) => {
   // check if existing user
   const userExist: IUser | null = await getUserByEmail(email);
 
-  if (!userExist) return null;
+  if (userExist) return null;
     
   // create new user
   const newUser = await createUser(firstName, lastName, email, password);
