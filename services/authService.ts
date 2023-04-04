@@ -74,7 +74,7 @@ export const createAccessToken = async (user: any ) => {
  * @param password 
  * @returns token or null
  */
-export const login = async (email: string, password: string) => {
+export const login = async (email: string, password: string, ip: string) => {
   // login section
   const user: IUser | null = await getUserByEmail(email);
   console.log("*USER",user);
@@ -98,7 +98,7 @@ export const login = async (email: string, password: string) => {
  * @param password 
  * @returns token or null
  */
-export const createAndLoginUser = async(firstName: string, lastName: string, email: string, password: string) => {
+export const createAndLoginUser = async(firstName: string, lastName: string, email: string, password: string, ip: string) => {
   // check if existing user
   const userExist: IUser | null = await getUserByEmail(email);
 
@@ -109,5 +109,5 @@ export const createAndLoginUser = async(firstName: string, lastName: string, ema
 
   if (!newUser) return null;
 
-  return await login(email, password);
+  return await login(email, password, ip);
 };

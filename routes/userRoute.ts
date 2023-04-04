@@ -10,13 +10,16 @@ userRoute.get("/register", async (req: Request, res: Response) => {
     const password = "abc123";
     const firstName = "bobFirstName";
     const lastName = "bobLastName";
-    // Check for body 
+    const ip = "127.0.0.1";
 
+    // Check for body 
     // const firstName = req.body && req.body.firstName || null;
     // const lastName = req.body && req.body.lastName || null;
     // const email = req.body && req.body.email || null;
     // const password = req.body && req.body.password || null;
+    // const ip = req.socket && req.socket.remoteAddress || null;
 
+  
     // check for empty strings
     const parsedEmail = email && email.trim();
     const parsedPassword = password && password.trim();
@@ -24,7 +27,7 @@ userRoute.get("/register", async (req: Request, res: Response) => {
     const parsedLastName = lastName && lastName.trim();
 
     if (!parsedFirstName || !parsedLastName  || !parsedEmail || !parsedPassword ) throw new Error("new_account_missing_information");
-    const token = await createAndLoginUser(parsedFirstName, parsedLastName, parsedEmail, parsedPassword);
+    const token = await createAndLoginUser(parsedFirstName, parsedLastName, parsedEmail, parsedPassword, ip);
    
     if (!token) throw new Error("account creation error");
     return token;
@@ -44,16 +47,18 @@ userRoute.get("/login", async(req: Request, res: Response) => {
     // Check for body 
     const email = "red@example.com";
     const password = "abc123";
+    const ip = "127.0.0.1";
     // const email = req.body && req.body.email || null;
     // const password = req.body && req.body.password || null;
+    // const ip = req.socket && req.socket.remoteAddress || null;
  
     const parsedEmail = email && email.trim();
     const parsedPassword = email && password.trim();
 
-    if (!parsedEmail || !parsedPassword) throw new Error("Login error");
+    if (!parsedEmail || !parsedPassword || !ip) throw new Error("Login error");
     
     // login section
-    return await login(parsedEmail, parsedPassword);
+    return await login(parsedEmail, parsedPassword, ip);
         
   } catch (error: any) {
       console.error("ERROR",error);
