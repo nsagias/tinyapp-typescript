@@ -11,7 +11,6 @@ import { initModels } from './models'
 import { Token, UrlModel, User } from "./models";
 import { createUser, getAllUsers, getUserByEmail } from "./DAL/userData";
 import { createShortUrl, deleteByShortUrl, getUrlByLongUrl, getUrlByShortUrl, getUrlsByUserId } from "./DAL/urlData";
-import { stringify } from "querystring";
 
 dotenv.config();
 
@@ -32,6 +31,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/", routes);
 
 
+// catch 404 error
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  console.log(err);
+  res.json({message: "Route not found"});
+  next(err);
+})
 
 async function run() {
   initModels(db)
@@ -65,6 +71,8 @@ async function run() {
 
   //  const isDeleted = await deleteByShortUrl("c7af2b", "1");
   //  console.log("IS DELETED",isDeleted);
+
+
 
   app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
