@@ -69,3 +69,24 @@ export const updateTokenById = async (id: number, values: Partial<IToken>): Prom
 
   return updatedToken;
 };
+
+
+/**
+ * Delete token by id
+ * @param id 
+ * @returns boolean
+ */
+export const deleteTokenById = async (id: number): Promise<boolean> => {
+
+  // confirm existing url
+  const existingToken: IToken | null = await getTokenById(id);
+ 
+  // if doesn't exist return true
+  if (!existingToken) return false;
+
+  // Update token
+  const hasUpdatedToken = await updateTokenById(id, { deletedAt: new Date() });
+  if (hasUpdatedToken) return true;
+ 
+  return false;
+};
