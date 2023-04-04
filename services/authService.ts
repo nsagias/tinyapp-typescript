@@ -77,12 +77,11 @@ export const createAccessToken = async (user: any ) => {
 export const login = async (email: string, password: string, ip: string) => {
   // login section
   const user: IUser | null = await getUserByEmail(email);
-  console.log("*USER",user);
 
   if (!user) return null;
 
   const userAuth: boolean = await checkPassword(email, password);
-  console.log("***Auth:", userAuth);
+
 
   if (userAuth) return createAccessToken(user);
   
