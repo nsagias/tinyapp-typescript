@@ -11,6 +11,7 @@ import { initModels } from './models'
 import { Token, UrlModel, User } from "./models";
 import { createUser, getAllUsers, getUserByEmail } from "./DAL/userData";
 import { createShortUrl, deleteByShortUrl, getUrlByLongUrl, getUrlByShortUrl, getUrlsByUserId } from "./DAL/urlData";
+import { checkTokenForIpAndDelete, createAccessToken, getTokenAndVerify, getTokenByUserIdAndIp, verifyToken } from "./DAL/tokenDAL";
 
 dotenv.config();
 
@@ -31,13 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/", routes);
 
 
-// catch 404 error
-app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  console.log(err);
-  res.json({message: "Route not found"});
-  next(err);
-})
+
 
 async function run() {
   initModels(db)
@@ -47,39 +42,23 @@ async function run() {
   // await UrlModel.sync({ alter: true });
   // await Token.sync({ alter: true });
 
-// users
-  // const user  = await createUser("myFirstName", "myLastName", "myEmail@anyemail.com", "abc123", true);
-  // const user  = await createUser("myDeleedUser", "myDeletedUser", "myDeletedUser@anyemail.com", "abc123", false);
-  // console.log("MY NEW USER",  user);
-  // const findUser = await getUserByEmail("myEmail@anyemail.com");
-  // console.log("FIND USER BY EMAIL", findUser);
-  // const allUsers  = await getAllUsers();
-  // console.log("GET ALL USERS", allUsers);
-  // const newShortUrl = await createShortUrl("www.bob.com", "3")
-  // console.log("NEW Short url", newShortUrl);
-  // createShortUrl = async (longUrl: string, userId: string)
 
-// urls
-  // const getShortURL = await getUrlByShortUrl("843624");
-  // console.log("GET SHORT URL", getShortURL);
-
-  // const getURLsByUserId = await getUrlsByUserId("3");
-  // console.log("GET URLS BY USER ID", getURLsByUserId);
-
-  // const getbyLongUrl = await getUrlByLongUrl("1", "www.bob0.com")
-  // console.log("GET URL BY LONG URL<BOOLEAN>",getbyLongUrl);
-
-  //  const isDeleted = await deleteByShortUrl("c7af2b", "1");
-  //  console.log("IS DELETED",isDeleted);
-
-
-
-  app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-  });
- 
 }
 
 run();
 
+// catch 404 error
+app.use((req, res, next) => {
+  // const err = new Error('Not Found');
+  // console.log(err);
+  // res.json({message: "Route not found"});
+  // TODO: get original address from socket
+  res.redirect("http://localhost:3001/");
+  // next(err);
+  next();
+})
+
+app.listen(port, () => {
+  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+});
 
