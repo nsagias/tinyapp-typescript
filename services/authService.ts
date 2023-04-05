@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from 'jsonwebtoken';
-import { createAccessToken } from "../DAL/tokenDAL";
+import { createAccessToken, deleteTokenById, getTokenByUserIdAndIp } from "../DAL/tokenDAL";
 import { IUser } from "../DAL/types/user";
 import { createUser, getUserByEmail } from "../DAL/userData";
 dotenv.config();
@@ -60,12 +60,29 @@ export const login = async (email: string, password: string, ip: string) => {
 
   if (!user) return null;
 
+  // check if valid password
   const userAuth: boolean = await checkPassword(email, password);
 
+  if (!userAuth) return null;
 
-  if (userAuth) return createAccessToken(user, ip);
+  // check for existing tokens
+  const existingActiveTokenForIp = await getTokenByUserIdAndIp(user.id?.toString()!, ip);
+
+  // delete token before creating new token for ip
+  if (existingActiveTokenForIp) await deleteTokenById(existingActiveTokenForIp.id!);
   
-  return null;
+  // TODO: Refacter into DTO converter
+  const userDAO: IUser = {
+    id: user.id, 
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    emailVerified: user.emailVerified || null,
+    active: user.active,
+  };
+  
+  // if user password authenticated
+  return await createAccessToken(userDAO, ip);
 };
 
 
