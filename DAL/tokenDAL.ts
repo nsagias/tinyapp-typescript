@@ -2,6 +2,7 @@ import { Token } from "../models";
 import { IToken } from "./types/token";
 import dotenv from "dotenv";
 import jwt, { verify } from 'jsonwebtoken';
+import { Op } from "sequelize";
 dotenv.config();
 
 
@@ -11,7 +12,10 @@ dotenv.config();
  * @returns 
  */
 export const getTokenById = async (id: number ): Promise<IToken | null> => {
-  return await Token.findOne({ where: { id} });
+  return await Token.findOne({ where: { 
+    id, 
+    deletedAt: { [Op.eq]: null }
+  } });
 };
 
 
@@ -22,7 +26,10 @@ export const getTokenById = async (id: number ): Promise<IToken | null> => {
  */
 // TODO: add unique to db
 export const getTokenByUserIdAndIp = async (userId: string, tokenIp: string ): Promise<IToken | null> => {
-  return await Token.findOne({ where: { userId, tokenIp} });
+  return await Token.findOne({ where: { 
+    userId,  
+    deletedAt: { [Op.eq]: null }
+  } });
 };
 
 
@@ -110,4 +117,20 @@ export const deleteTokenById = async (id: number): Promise<boolean> => {
   if (hasUpdatedToken) return true;
  
   return false;
+};
+
+
+/**
+ * Check for existing tokens for user ip and delete
+ * @param id 
+ * @param ip 
+ * @returns boolean | null
+ */
+export const checkTokenForIpAndDelete = async (id: string, ip: string): Promise<boolean | null> => {
+  // check for existing
+  const isExisting = await getTokenByUserIdAndIp(id, ip);
+  // delete token before creating new token for ip
+  if (!isExisting)  return null;
+
+  return await deleteTokenById(isExisting.id!);
 };
