@@ -1,15 +1,16 @@
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
-import { checkTokenForIpAndDelete, createAccessToken } from "../DAL/tokenDAL";
+import { checkTokenForIpAndDelete, createAccessToken, getTokenByUserIdAndIp } from "../DAL/tokenDAL";
 import { IUser } from "../DAL/types/user";
 import { createUser, getUserByEmail } from "../DAL/userData";
+import jwt, { verify } from 'jsonwebtoken';
 dotenv.config();
 
 /**
  * Password hashing function to encapsulate 
  * @param password 
  * @param rounds 
- * @returns 
+ * @returns returns hashed passwoord
  */
 export const hashPassword = async (password: string, rounds: number = 10): Promise<string> => {
   return await bcrypt.hash(password, rounds);
@@ -19,7 +20,7 @@ export const hashPassword = async (password: string, rounds: number = 10): Promi
  * Password compare to check if password send matches hashed password
  * @param password 
  * @param hashedPassword 
- * @returns 
+ * @returns boolean
  */
 export const comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
   return await bcrypt.compare(password, hashedPassword);
@@ -27,10 +28,33 @@ export const comparePassword = async (password: string, hashedPassword: string):
 
 
 /**
+ * Verify token against secret
+ * @param token 
+ * @returns 
+ */
+export const verifyToken = async (token: any): Promise<string | jwt.JwtPayload> => {
+  const authSecret = process.env.AUTH_SECRET || null;
+  return await verify(token.toString(), authSecret!.toString());
+};
+
+
+/**
+ * Get and verify token
+ * @param userId 
+ * @param ip 
+ * @returns 
+ */
+export const getTokenAndVerify = async (userId: string, ip: string): Promise<string | jwt.JwtPayload> => {
+  const token = await getTokenByUserIdAndIp(userId, ip);
+  return await verifyToken(token?.authToken);
+};
+
+
+/**
  * Check password matches db
- * @param {string} email
- * @param {string} password
- * @returns {string} returns a user ID if authenticated or undefined if not authenticated
+ * @param string email
+ * @param string password
+ * @returns boolean
  */
 export const checkPassword = async (email: string, password: string): Promise<boolean> => {
   const user: any = await getUserByEmail(email);

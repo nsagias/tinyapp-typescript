@@ -1,7 +1,7 @@
 import { Token } from "../models";
 import { IToken } from "./types/token";
 import dotenv from "dotenv";
-import jwt, { verify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { Op } from "sequelize";
 dotenv.config();
 
@@ -57,26 +57,6 @@ export const createAccessToken = async (user: any, tokenIp: string ): Promise<IT
   return await Token.create(newTokenRecord) || null;
 };
 
-/**
- * Verify token against secret
- * @param token 
- * @returns 
- */
-export const verifyToken = async (token: any): Promise<string | jwt.JwtPayload> => {
-  const authSecret = process.env.AUTH_SECRET || null;
-  return await verify(token.toString(), authSecret!.toString());
-};
-
-/**
- * Get and verify token
- * @param userId 
- * @param ip 
- * @returns 
- */
-export const getTokenAndVerify = async (userId: string, ip: string): Promise<string | jwt.JwtPayload> => {
-  const token = await getTokenByUserIdAndIp(userId, ip);
-  return await verifyToken(token?.authToken);
-};
 
 
 /**
