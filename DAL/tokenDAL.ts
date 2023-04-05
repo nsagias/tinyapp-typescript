@@ -16,7 +16,7 @@ export const getTokenById = async (id: number ): Promise<IToken | null> => {
 
 
 /**
- * Get token by user id
+ * Get token by user id and tokenIP
  * @param userId 
  * @returns 
  */
@@ -24,7 +24,6 @@ export const getTokenById = async (id: number ): Promise<IToken | null> => {
 export const getTokenByUserIdAndIp = async (userId: string, tokenIp: string ): Promise<IToken | null> => {
   return await Token.findOne({ where: { userId, tokenIp} });
 };
-
 
 
 /**
@@ -48,25 +47,28 @@ export const createAccessToken = async (user: any, tokenIp: string ): Promise<IT
   const newTokenRecord: Token = { authToken, tokenIp, userId: user.id} as Token;
 
   // Create new record
-  const createdTokenRecord = Token.create(newTokenRecord);
-
-  // Check if record created
-  if (!createdTokenRecord) return null;
-
-  // return created token
-  return createdTokenRecord;
+  return await Token.create(newTokenRecord) || null;
 };
 
+/**
+ * Verify token against secret
+ * @param token 
+ * @returns 
+ */
 export const verifyToken = async (token: any): Promise<string | jwt.JwtPayload> => {
   const authSecret = process.env.AUTH_SECRET || null;
-  const verifycode: string | jwt.JwtPayload = await verify(token.toString(), authSecret!.toString());
-  return verifycode;
+  return await verify(token.toString(), authSecret!.toString());
 };
 
-export const getAndVerifyToken = async (userId: string, ip: string): Promise<string | jwt.JwtPayload> => {
+/**
+ * Get and verify token
+ * @param userId 
+ * @param ip 
+ * @returns 
+ */
+export const getTokenAndVerify = async (userId: string, ip: string): Promise<string | jwt.JwtPayload> => {
   const token = await getTokenByUserIdAndIp(userId, ip);
-  const tokenVerifyResult: string | jwt.JwtPayload = await verifyToken(token?.authToken)
-  return tokenVerifyResult;
+  return await verifyToken(token?.authToken);
 };
 
 
@@ -85,9 +87,8 @@ export const updateTokenById = async (id: number, values: Partial<IToken>): Prom
 
   // update and save new values
   await token.set(values);
-  const updatedToken = await token.save();
 
-  return updatedToken;
+  return await token.save() || null;
 };
 
 
