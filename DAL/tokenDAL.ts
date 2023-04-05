@@ -126,9 +126,9 @@ export const deleteTokenById = async (id: number): Promise<boolean> => {
  * @param ip 
  * @returns boolean | null
  */
-export const checkTokenForIpAndDelete = async (id: string, ip: string): Promise<boolean | null> => {
+export const checkTokenForIpAndDelete = async (userId: string, ip: string): Promise<boolean | null> => {
   // check for existing
-  const isExisting = await getTokenByUserIdAndIp(id, ip);
+  const isExisting = await getTokenByUserIdAndIp(userId, ip);
   // delete token before creating new token for ip
   if (!isExisting)  return null;
 
