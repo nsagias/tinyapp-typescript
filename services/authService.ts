@@ -32,7 +32,7 @@ export const comparePassword = async (password: string, hashedPassword: string):
  * @param token 
  * @returns 
  */
-export const verifyToken = async (token: any): Promise<string | jwt.JwtPayload> => {
+export const authenticateToken = async (token: any): Promise<string | jwt.JwtPayload> => {
   const authSecret = process.env.AUTH_SECRET || null;
   return await verify(token.toString(), authSecret!.toString());
 };
@@ -44,9 +44,9 @@ export const verifyToken = async (token: any): Promise<string | jwt.JwtPayload> 
  * @param ip 
  * @returns 
  */
-export const getTokenAndVerify = async (userId: string, ip: string): Promise<string | jwt.JwtPayload> => {
+export const authenticateTokenUser = async (userId: string, ip: string): Promise<string | jwt.JwtPayload> => {
   const token = await getTokenByUserIdAndIp(userId, ip);
-  return await verifyToken(token?.authToken);
+  return await authenticateToken(token?.authToken);
 };
 
 
@@ -79,8 +79,6 @@ export const checkPassword = async (email: string, password: string): Promise<bo
  * @returns token or null
  */
 export const login = async (email: string, password: string, ip: string) => {
-
-
   // login section
   const user: IUser | null = await getUserByEmail(email);
 
@@ -91,7 +89,6 @@ export const login = async (email: string, password: string, ip: string) => {
 
   if (!userAuth) return null;
 
- 
   // Check for existing Token and Delete
   await checkTokenForIpAndDelete (user.id?.toString()!, ip);
 
@@ -138,9 +135,19 @@ export const createAndLoginUser = async(firstName: string, lastName: string, ema
 };
 
 
-export const logout = async (email: string, ip: string): Promise<boolean | null> => {
+export const logout = async (email: string, ip: string, token: any): Promise<boolean | null> => {
+
+  // chekc if user exist by email
   const user: IUser | null = await getUserByEmail(email);
+
   if (!user) return null;
-  // Check for existing Token and Delete
-  return await checkTokenForIpAndDelete (user.id?.toString()!, ip) || null;
+
+  // get token data
+  const tokenData = await authenticateToken(token) as IUser;
+
+  // if email matches token delete token else return null
+  if (tokenData.email === email) 
+    return await checkTokenForIpAndDelete (user.id?.toString()!, ip);
+
+  return null;
 };
