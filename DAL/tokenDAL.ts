@@ -57,6 +57,18 @@ export const createAccessToken = async (user: any, tokenIp: string ): Promise<IT
   return createdTokenRecord;
 };
 
+export const verifyToken = async (token: any): Promise<string | jwt.JwtPayload> => {
+  const authSecret = process.env.AUTH_SECRET || null;
+  const verifycode: string | jwt.JwtPayload = await verify(token.toString(), authSecret!.toString());
+  return verifycode;
+};
+
+export const getAndVerifyToken = async (userId: string, ip: string): Promise<string | jwt.JwtPayload> => {
+  const token = await getTokenByUserIdAndIp(userId, ip);
+  const tokenVerifyResult: string | jwt.JwtPayload = await verifyToken(token?.authToken)
+  return tokenVerifyResult;
+};
+
 
 /**
  * Updated token by id
