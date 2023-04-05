@@ -51,6 +51,7 @@ export const checkPassword = async (email: string, password: string): Promise<bo
  * Login user
  * @param email 
  * @param password 
+ * @param ip
  * @returns token or null
  */
 export const login = async (email: string, password: string, ip: string) => {
@@ -103,4 +104,12 @@ export const createAndLoginUser = async(firstName: string, lastName: string, ema
   if (!newUser) return null;
 
   return await login(email, password, ip);
+};
+
+
+export const logout = async (email: string, ip: string): Promise<boolean | null> => {
+  const user: IUser | null = await getUserByEmail(email);
+  if (!user) return null;
+  // Check for existing Token and Delete
+  return await checkTokenForIpAndDelete (user.id?.toString()!, ip) || null;
 };
