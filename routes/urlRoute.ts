@@ -17,7 +17,7 @@ urlRoute.get("/u/:shortUrl", async (req: Request, res: Response) => {
     }
 
     // receives a shoten url from an anonymous user
-    const longUrlData: UrlModel  = await getUrlByShortUrl(shortUrl) as UrlModel;
+    const longUrlData: UrlModel  = await getUrlByShortUrl(shortUrl, null) as UrlModel;
 
     // check if url exist
     if (!longUrlData) throw new Error("URL does not exist")
@@ -37,7 +37,7 @@ urlRoute.get("/u/:shortUrl", async (req: Request, res: Response) => {
 /**
  * Get urls for user
  */
-urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
+urlRoute.get("/u/:userId", async(req: Request, res: Response) => {
   try {
     // 
     const userId = req.params && req.params.userId && parseInt(req.params.userId, 10) || null;
@@ -47,7 +47,7 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
     if (!cookieUserId) throw new Error("please authenticate")
 
     const urls = await getUrlsByUserId(cookieUserId);
-    if (!urls || !(urls.length > 0)) throw new Error("No urls found")
+    // if (!urls || !(urls.length > 0)) return res.json({ message: "seccuess", data: null})
 
     // TODO: DTO
     res.json({ message: "success",  data: urls });
@@ -59,79 +59,58 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
 });
 
 
-/**
- * Get url by shortendid
- */
-urlRoute.get("/url/:shortUrl", async (req: Request, res: Response) => {
-  try {
-    const shortenedURL = req.params && req.params.shortenedURL || null;
-    const cookieUserId = req.cookies && req.cookies.userID && parseInt(req.cookies.userID, 10) || null;
-
-    if (!shortenedURL)  throw new Error("please provide shortened Url");
-    if (!cookieUserId) throw new Error("please authenticate");
-    
-    // receives a shoten url from an anonymous user
-    const longURLData = await getUrlByShortUrl(shortenedURL)
-    if (!longURLData) throw new Error("URL does not exist");
-        
-    // TODO: add DTO
-    res.json({ message: "success", data: longURLData});
-
-  } catch (error: any) {
-    console.error(error);
-    res.json({ message: "error"});
-  }
-});
-
 
 
 // urlRoute.post
-urlRoute.get("/url/new/:longUrl", async (req: Request, res: Response) => {
+urlRoute.get("/u/delete", async (req: Request, res: Response) => {
   try {
     // TODO: update before
-    // const longURL = req.body && req.body.longURL || null;
-    const longURL = req.params && req.params.longUrl || null;
-    const cookieUserId = req.cookies && req.cookies.userID  && parseInt(req.cookies.userID, 10) || null;
-
-    if (!longURL)  throw new Error("please provide shortened Url");
-    if (!cookieUserId) throw new Error("please authenticate");
-
-    // check if long name already exists
-    const existingLongURL = await getUrlByLongUrl(longURL, cookieUserId);
-
-    if (existingLongURL)  throw new Error("existing url");
-    
-    // receives a shoten url from an anonymous user
-    const longURLData = await createShortUrl(longURL, cookieUserId);
-    if (!longURLData ) throw new Error("URL was not created");
-        
-    // TODO: add DTO
-    res.json({ message: "success", data: longURLData});
-
-  } catch (error: any) {
-    console.error(error);
-    res.json({ message: "error"});
-  }
-});
-
-
-// urlRoute.post
-urlRoute.get("/url/delete/:shortUrlId", async (req: Request, res: Response) => {
-  try {
-    // TODO: update before
-    // const longURL = req.body && req.body.shortURId|| null;
+    // const longURL = req.body && req.body.shortURId|| null; // use body from form
     const shortURLId = req.params && req.params.shortUrlId || null;
-    const userId = req.cookies && req.cookies.userID && parseInt(req.cookies.userID) || null;
+    const userData = req.cookies && req.cookies.userID && parseInt(req.cookies.userID) || null;
 
     if (!shortURLId)  throw new Error("please provide shortened Url");
-    if (!userId) throw new Error("please authenticate");
+    if (!userData) throw new Error("please authenticate");
 
-    const isDeleted = await deleteByShortUrl(shortURLId, userId);
+    const isDeleted = await deleteByShortUrl(shortURLId, userData.id);
 
     if (isDeleted) return res.json({ message: true});
     
     res.json({ message: false});
  
+  } catch (error: any) {
+    console.error(error);
+    res.json({ message: "error"});
+  }
+});
+
+
+
+// urlRoute.post
+// new routes urls routes
+urlRoute.get("/u/new", async (req: Request, res: Response) => {
+  try {
+    // TODO: update before
+    // const longURL = req.body && req.body.longURL || null;
+    const longURL = req.params && req.params.longUrl || null; // do not use params
+    const userData = req.cookies && req.cookies.userID  && parseInt(req.cookies.userID, 10) || null; // update with token info
+
+    // t oken info
+    if (!longURL)  throw new Error("please provide shortened Url");
+    if (!userData) throw new Error("please authenticate");
+
+    // check if long name already exists
+    const existingLongURL = await getUrlByLongUrl(longURL, userData.id);
+
+    if (existingLongURL)  throw new Error("existing url");
+    
+    // receives a shoten url from an anonymous user
+    const longURLData = await createShortUrl(longURL, userData.id);
+    if (!longURLData ) throw new Error("URL was not created");
+        
+    // TODO: add DTO
+    res.json({ message: "success", data: longURLData});
+
   } catch (error: any) {
     console.error(error);
     res.json({ message: "error"});
