@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
-import jwt from 'jsonwebtoken';
-import { createAccessToken, deleteTokenById, getTokenByUserIdAndIp } from "../DAL/tokenDAL";
+import { checkTokenForIpAndDelete, createAccessToken } from "../DAL/tokenDAL";
 import { IUser } from "../DAL/types/user";
 import { createUser, getUserByEmail } from "../DAL/userData";
 dotenv.config();
@@ -65,12 +64,10 @@ export const login = async (email: string, password: string, ip: string) => {
 
   if (!userAuth) return null;
 
-  // check for existing tokens
-  const existingActiveTokenForIp = await getTokenByUserIdAndIp(user.id?.toString()!, ip);
+ 
+  // Check for existing Token and Delete
+  await checkTokenForIpAndDelete (user.id?.toString()!, ip);
 
-  // delete token before creating new token for ip
-  if (existingActiveTokenForIp) await deleteTokenById(existingActiveTokenForIp.id!);
-  
   // TODO: Refacter into DTO converter
   const userDAO: IUser = {
     id: user.id, 
