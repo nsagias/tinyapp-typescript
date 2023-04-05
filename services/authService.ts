@@ -55,6 +55,8 @@ export const checkPassword = async (email: string, password: string): Promise<bo
  * @returns token or null
  */
 export const login = async (email: string, password: string, ip: string) => {
+
+
   // login section
   const user: IUser | null = await getUserByEmail(email);
 
@@ -70,7 +72,7 @@ export const login = async (email: string, password: string, ip: string) => {
   await checkTokenForIpAndDelete (user.id?.toString()!, ip);
 
   // TODO: Refacter into DTO converter
-  const userDAO: IUser = {
+  const userInfo: IUser | null = {
     id: user.id, 
     firstName: user.firstName,
     lastName: user.lastName,
@@ -80,7 +82,12 @@ export const login = async (email: string, password: string, ip: string) => {
   };
   
   // if user password authenticated
-  return await createAccessToken(userDAO, ip);
+  const token = await createAccessToken(userInfo, ip);
+
+  if (!token) return null;
+  const authData = { token, userInfo };
+  return authData;
+
 };
 
 
