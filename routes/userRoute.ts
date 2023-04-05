@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express";
-import { createAndLoginUser, login } from "../services/authService";
+import { createAndLoginUser, login, logout } from "../services/authService";
 
 export const userRoute = Router();
+
 
 // userRoute.post
 userRoute.get("/register", async (req: Request, res: Response) => {
@@ -17,9 +18,9 @@ userRoute.get("/register", async (req: Request, res: Response) => {
     // const lastName = req.body && req.body.lastName || null;
     // const email = req.body && req.body.email || null;
     // const password = req.body && req.body.password || null;
-    // const ip = req.socket && req.socket.remoteAddress || null;
+    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
 
-  
+    
     // check for empty strings
     const parsedEmail = email && email.trim();
     const parsedPassword = password && password.trim();
@@ -72,6 +73,11 @@ userRoute.get("/login", async(req: Request, res: Response) => {
 userRoute.post("/logout", async (req: Request, res: Response) => {
   // const token = req.body && req.body.token || null;
   // find token and logout token
+  const ip = req.socket && req.socket.remoteAddress || null;
+  if (!ip) return res.json({ message: "error occured while loging out"});
+  
+  // token verify and get email from token
+  logout("email", ip )
 
   res.json({ message: "logout route"})
 });
