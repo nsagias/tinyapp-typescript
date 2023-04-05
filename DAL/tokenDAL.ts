@@ -1,7 +1,7 @@
 import { Token } from "../models";
 import { IToken } from "./types/token";
 import dotenv from "dotenv";
-import jwt from 'jsonwebtoken';
+import jwt, { verify } from 'jsonwebtoken';
 dotenv.config();
 
 
@@ -16,12 +16,24 @@ export const getTokenById = async (id: number ): Promise<IToken | null> => {
 
 
 /**
+ * Get token by user id
+ * @param userId 
+ * @returns 
+ */
+// TODO: add unique to db
+export const getTokenByUserIdAndIp = async (userId: string, tokenIp: string ): Promise<IToken | null> => {
+  return await Token.findOne({ where: { userId, tokenIp} });
+};
+
+
+
+/**
  * Create new access token and dave to db
  * @param user 
  * @param ip 
  * @returns token or null
  */
-export const createAccessToken = async (user: any, ip: string ): Promise<IToken| null> => {
+export const createAccessToken = async (user: any, tokenIp: string ): Promise<IToken| null> => {
   // get auth secret and issuer from .env
   const authSecret = process.env.AUTH_SECRET || null;
   const issuer = process.env.TOKEN_ISSUER || null;
@@ -30,14 +42,10 @@ export const createAccessToken = async (user: any, ip: string ): Promise<IToken|
   if (!authSecret || !issuer) return null;
 
   // Create signed auth token
-  const authToken = await jwt.sign(user, authSecret, {
-    algorithm: "HS256",
-    issuer,
-    subject: user.id
-  });
+  const authToken = await jwt.sign(user, authSecret.toString());
 
   // new token to be saved
-  const newTokenRecord = { authToken, ip, userId: user.id };
+  const newTokenRecord: Token = { authToken, tokenIp, userId: user.id} as Token;
 
   // Create new record
   const createdTokenRecord = Token.create(newTokenRecord);
