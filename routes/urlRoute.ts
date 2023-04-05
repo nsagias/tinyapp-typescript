@@ -7,7 +7,7 @@ export const urlRoute = Router();
 /**
  * Redirect redirect by shortUrl
  */
-urlRoute.get("/:shortUrl", async (req: Request, res: Response) => {
+urlRoute.get("/u/:shortUrl", async (req: Request, res: Response) => {
   try {
 
     const shortUrl = req.params && req.params.shortUrl || null;
