@@ -2,27 +2,35 @@ import { Op } from "sequelize";
 import { UrlModel } from "../models/UrlModel";
 import { idGenerator } from "../services/utilsService";
 
+
+
 /**
- * Get urls by user id
- * @returns all urls for a user
+ * Get all urls by user id
+ * @param userId 
+ * @returns 
  */
 export const getUrlsByUserId = async (userId: string): Promise<UrlModel[]> => {
   return await UrlModel.findAll({ where : { userId } });
 };
 
 
+
 /**
  * Get long url by searching with the short url
- * @param shortUrl 
- * @returns https:// route
+ * @param shortUrl
+ * @param userId
+ * @returns https:// route or null
  */
-export const getUrlByShortUrl = async (shortUrl: string): Promise<UrlModel | null> => {
-  return await UrlModel.findOne({ 
-    where : { 
+export const getUrlByShortUrl = async (shortUrl: string, userId: string | null): Promise<UrlModel | null> => {
+  
+  let query: any = { 
+    where : {
       shortUrl,
-      deletedAt: {[Op.eq]: null }
-    } 
-  });
+      deletedAt: { [Op.eq]: null }
+  }};
+  if (userId) query.where.userId = userId;
+
+  return await UrlModel.findOne(query);
 };
 
 
@@ -56,7 +64,7 @@ export const createShortUrl = async (longUrl: string, userId: string): Promise<U
   let shortUrl = await idGenerator();
   
   // check if already exists before generatoring
-  const isExistingUrl = await getUrlByShortUrl(shortUrl);
+  const isExistingUrl = await getUrlByShortUrl(shortUrl, userId);
 
   if (isExistingUrl) {
     // existing call new url with 8 letter
@@ -103,7 +111,7 @@ export const updateUrlById = async (id: number, values: Partial<UrlModel>): Prom
 export const deleteByShortUrl = async (shortUrl:string, userId: string): Promise<boolean> => {
 
   // confirm existing url
-  const existingUrl: UrlModel | null = await getUrlByShortUrl(shortUrl);
+  const existingUrl: UrlModel | null = await getUrlByShortUrl(shortUrl, userId);
  
   // if doesn't exist return true
   if ( existingUrl && existingUrl.userId.toString() === userId.toString()) {
