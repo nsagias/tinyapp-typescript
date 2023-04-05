@@ -45,6 +45,7 @@ userRoute.get("/register", async (req: Request, res: Response) => {
 // app.post
 userRoute.get("/login", async(req: Request, res: Response) => {
   try {
+
     // Check for body 
     const email = "red@example.com";
     const password = "abc123";
@@ -59,7 +60,12 @@ userRoute.get("/login", async(req: Request, res: Response) => {
     if (!parsedEmail || !parsedPassword || !ip) throw new Error("Login error");
     
     // login section
-    return await login(parsedEmail, parsedPassword, ip);
+    const authData = await login(parsedEmail, parsedPassword, ip);
+
+    // if auth data is null throw error
+    if (!authData) throw new Error(" Login error");
+
+    res.json(authData);
         
   } catch (error: any) {
       console.error("ERROR",error);
@@ -77,7 +83,7 @@ userRoute.post("/logout", async (req: Request, res: Response) => {
   if (!ip) return res.json({ message: "error occured while loging out"});
   
   // token verify and get email from token
-  logout("email", ip )
+  await logout("email", ip);
 
   res.json({ message: "logout route"})
 });
