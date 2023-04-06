@@ -59,7 +59,7 @@ export const authenticateTokenUser = async (userId: string, ip: string): Promise
  * @returns  boolean
  */
 
-export const authencateShortUrlBelongsToUser = async (userId: string, ip: string, shortUrl: string): Promise<boolean> =>  {
+export const authenticateShortUrlBelongsToUser = async (userId: string, ip: string, shortUrl: string): Promise<boolean> =>  {
   //  authenticate token belongs to user
   const tokenData = await authenticateTokenUser(userId, ip) as IUser;
   if (!tokenData) return false;
