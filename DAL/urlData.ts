@@ -21,7 +21,7 @@ export const getUrlsByUserId = async (userId: string): Promise<UrlModel[]> => {
  * @param userId
  * @returns https:// route or null
  */
-export const getUrlByShortUrl = async (shortUrl: string, userId: string | null): Promise<UrlModel | null> => {
+export const getUrlByShortUrl = async (shortUrl: string, userId?: string | null): Promise<UrlModel | null> => {
   
   let query: any = { 
     where : {
