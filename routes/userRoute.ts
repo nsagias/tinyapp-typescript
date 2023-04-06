@@ -42,7 +42,7 @@ userRoute.get("/register", async (req: Request, res: Response) => {
         
   } catch (error: any) {
       console.error("ERROR",error);
-      return res.json({ message: errorMessage})
+      return res.json({ message: errorMessage});
   };
  
 });
@@ -81,8 +81,8 @@ userRoute.get("/login", async(req: Request, res: Response) => {
     res.json(authData);
         
   } catch (error: any) {
-      console.error("ERROR",error);
-      return res.json({ message: errorMessage})
+    console.error("ERROR",error);
+    return res.json({ message: errorMessage});
   }
 });
 
@@ -94,16 +94,22 @@ userRoute.post("/logout", async (req: Request, res: Response) => {
   const errorMessage = "error occured while loging out";
   // find token and logout token
 
-  const token = req.body && req.body.token || null;
-  if (!token) return res.json({ message: errorMessage});
+  try {
+    const token = req.body && req.body.token || null;
+    if (!token) return res.json({ message: errorMessage});
 
-  const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
 
-  // TODO: ip validation
-  if (!ip) return res.json({ message: errorMessage});
+    // TODO: ip validation
+    if (!ip) return res.json({ message: errorMessage});
 
-  // token verify and get email from token
-  // await logout("email", ip);
-
-  res.json({ message: "logged out"})
+    // token verify and get email from token
+    // await logout("email", ip);
+    res.json({ message: "logged out"})
+      
+    } catch (error: any) {
+      console.error("ERROR",error);
+      return res.json({ message: errorMessage});
+    }
+  
 });
