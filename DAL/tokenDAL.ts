@@ -28,7 +28,8 @@ export const getTokenById = async (id: number ): Promise<IToken | null> => {
 export const getTokenByUserIdAndIp = async (userId: string, tokenIp: string ): Promise<IToken | null> => {
   return await Token.findOne({ where: { 
     userId,  
-    deletedAt: { [Op.eq]: null }
+    deletedAt: { [Op.eq]: null },
+    tokenIp
   } });
 };
 
@@ -108,9 +109,9 @@ export const deleteTokenById = async (id: number): Promise<boolean> => {
  */
 export const checkTokenForIpAndDelete = async (userId: string, ip: string): Promise<boolean | null> => {
   // check for existing
-  const isExisting = await getTokenByUserIdAndIp(userId, ip);
+  const isExistingToken = await getTokenByUserIdAndIp(userId, ip);
   // delete token before creating new token for ip
-  if (!isExisting)  return null;
+  if (!isExistingToken)  return null;
 
-  return await deleteTokenById(isExisting.id!);
+  return await deleteTokenById(isExistingToken.id!);
 };
