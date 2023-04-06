@@ -31,7 +31,7 @@ export const comparePassword = async (password: string, hashedPassword: string):
 /**
  * Verify token against secret
  * @param token 
- * @returns 
+ * @returns returns token payload
  */
 export const authenticateToken = async (token: any): Promise<string | jwt.JwtPayload> => {
   const authSecret = process.env.AUTH_SECRET || null;
@@ -40,14 +40,27 @@ export const authenticateToken = async (token: any): Promise<string | jwt.JwtPay
 
 
 /**
- * Get and verify token
+ * Authenticate token by comparing incoming and token record
  * @param userId 
  * @param ip 
- * @returns 
+ * @returns token or null
  */
-export const authenticateTokenUser = async (userId: string, ip: string): Promise<string | jwt.JwtPayload> => {
-  const token = await getTokenByUserIdAndIp(userId, ip);
-  return await authenticateToken(token?.authToken);
+export const authenticateTokenUser = async (userId: string, ip: string, authToken: any): Promise<string | jwt.JwtPayload | null> => {
+
+  // get existing token record and validate user provider token
+  const existingTokenRecord = await getTokenByUserIdAndIp(userId, ip);
+  const authenticatedAuthToken = await authenticateToken(authToken);
+
+  // Check if values are null and return null if so
+  if (!existingTokenRecord || !authenticatedAuthToken) return null;
+
+  // autehenicate and get existing token data
+  const existingTokenRecordData = await authenticateToken(existingTokenRecord?.authToken);
+
+  // if token values match return the authenticated token
+  if (existingTokenRecordData === authenticatedAuthToken) return authenticatedAuthToken;
+
+  return null;
 };
 
 
@@ -58,19 +71,19 @@ export const authenticateTokenUser = async (userId: string, ip: string): Promise
  * @param shortUrl 
  * @returns  boolean
  */
-
-export const authenticateShortUrlBelongsToUser = async (userId: string, ip: string, shortUrl: string): Promise<boolean> =>  {
+export const authenticateShortUrlBelongsToUser = async (userId: string, ip: string, shortUrl: string, authToken: any): Promise<boolean> =>  {
   //  authenticate token belongs to user
-  const tokenData = await authenticateTokenUser(userId, ip) as IUser;
-  if (!tokenData) return false;
+  const existingTokenRecordData = await authenticateTokenUser(userId, ip, authToken) as IUser;
+  if (!existingTokenRecordData) return false;
 
   //  get user id, search for user URL for user by url id
-  const isExistsShortUrlForUser =  await getUrlByShortUrl(shortUrl, tokenData.id?.toString())
+  const isExistsShortUrlForUser =  await getUrlByShortUrl(shortUrl, existingTokenRecordData.id?.toString())
  
   // return true if existing
   if (isExistsShortUrlForUser) return true;
   return false;
 };
+
 
 /**
  * Check password matches db
