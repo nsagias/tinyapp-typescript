@@ -4,6 +4,7 @@ import { checkTokenForIpAndDelete, createAccessToken, getTokenByUserIdAndIp } fr
 import { IUser } from "../DAL/types/user";
 import { createUser, getUserByEmail } from "../DAL/userData";
 import jwt, { verify } from 'jsonwebtoken';
+import { getUrlByShortUrl } from "../DAL/urlData";
 dotenv.config();
 
 /**
@@ -51,7 +52,11 @@ export const authenticateTokenUser = async (userId: string, ip: string): Promise
 
 
 /**
- * Authen toke user and route belongs to user
+ * Authenticate url belongs to user
+ * @param userId 
+ * @param ip 
+ * @param shortUrl 
+ * @returns  boolean
  */
 
 export const authencateShortUrlBelongsToUser = async (userId: string, ip: string, shortUrl: string): Promise<boolean> =>  {
@@ -60,10 +65,11 @@ export const authencateShortUrlBelongsToUser = async (userId: string, ip: string
   if (!tokenData) return false;
 
   //  get user id, search for user URL for user by url id
+  const isExistsShortUrlForUser =  await getUrlByShortUrl(shortUrl, tokenData.id?.toString())
  
-
-  // return
-  return true;
+  // return true if existing
+  if (isExistsShortUrlForUser) return true;
+  return false;
 };
 
 /**
@@ -151,6 +157,13 @@ export const createAndLoginUser = async(firstName: string, lastName: string, ema
 };
 
 
+/**
+ * Logout user
+ * @param email 
+ * @param ip 
+ * @param token 
+ * @returns boolean or null
+ */
 export const logout = async (email: string, ip: string, token: any): Promise<boolean | null> => {
 
   // chech if user exist by email
