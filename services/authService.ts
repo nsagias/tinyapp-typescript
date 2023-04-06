@@ -51,6 +51,22 @@ export const authenticateTokenUser = async (userId: string, ip: string): Promise
 
 
 /**
+ * Authen toke user and route belongs to user
+ */
+
+export const authencateShortUrlBelongsToUser = async (userId: string, ip: string, shortUrl: string): Promise<boolean> =>  {
+  //  authenticate token belongs to user
+  const tokenData = await authenticateTokenUser(userId, ip) as IUser;
+  if (!tokenData) return false;
+
+  //  get user id, search for user URL for user by url id
+ 
+
+  // return
+  return true;
+};
+
+/**
  * Check password matches db
  * @param string email
  * @param string password
