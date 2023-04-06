@@ -6,6 +6,10 @@ export const authRoute = Router();
 // TODO: app.post
 // TODO: to update with token authentication
 authRoute.get("/authenticate", async(req: Request, res: Response) => {
+  // const ip = "127.0.0.1";
+  const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+  if (!ip) throw new Error("Athentication Error");
+
   const myUserId = 1;
   const cookieCheck = req.cookies && req.cookies.userID || null;
   if (cookieCheck === myUserId) {
