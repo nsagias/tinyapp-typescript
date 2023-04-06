@@ -153,7 +153,7 @@ export const createAndLoginUser = async(firstName: string, lastName: string, ema
 
 export const logout = async (email: string, ip: string, token: any): Promise<boolean | null> => {
 
-  // chekc if user exist by email
+  // chech if user exist by email
   const user: IUser | null = await getUserByEmail(email);
 
   if (!user) return null;
@@ -162,8 +162,7 @@ export const logout = async (email: string, ip: string, token: any): Promise<boo
   const tokenData = await authenticateToken(token) as IUser;
 
   // if email matches token delete token else return null
-  if (tokenData.email === email) 
-    return await checkTokenForIpAndDelete (user.id?.toString()!, ip);
+  if (tokenData) return await checkTokenForIpAndDelete (user.id?.toString()!, ip);
 
   return null;
 };
