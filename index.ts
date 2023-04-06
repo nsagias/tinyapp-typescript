@@ -8,10 +8,6 @@ import cors from "cors";
 import { routes } from './routes';
 import db from "./databases/sequelize/db";
 import { initModels } from './models'
-import { Token, UrlModel, User } from "./models";
-import { createUser, getAllUsers, getUserByEmail } from "./DAL/userData";
-import { createShortUrl, deleteByShortUrl, getUrlByLongUrl, getUrlByShortUrl, getUrlsByUserId } from "./DAL/urlData";
-import { checkTokenForIpAndDelete, createAccessToken, getTokenAndVerify, getTokenByUserIdAndIp, verifyToken } from "./DAL/tokenDAL";
 
 dotenv.config();
 
@@ -19,6 +15,16 @@ const app: Express = express();
 const port = parseInt(process.env.PORT || '3001');
 const origin: string | undefined = process.env.corsOptions;
 const corsOptions = { origin };
+
+async function run() {
+  initModels(db)
+  await db.sync()
+  // await User.sync({ alter: true });
+  // await UrlModel.sync({ alter: true });
+  // await Token.sync({ alter: true })
+}
+
+run();
 
 // app.use(cors(corsOptions));
 app.use(logger('dev'));
@@ -31,29 +37,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/", routes);
 
-
-
-
-async function run() {
-  initModels(db)
-  await db.sync()
-  
-  // await User.sync({ alter: true });
-  // await UrlModel.sync({ alter: true });
-  // await Token.sync({ alter: true });
-
-
-}
-
-run();
-
 // catch 404 error
 app.use((req, res, next) => {
   // const err = new Error('Not Found');
   // console.log(err);
   // res.json({message: "Route not found"});
   // TODO: get original address from socket
-  res.redirect("http://localhost:3001/");
+  res.redirect("http://localhost:3001/404");
   // next(err);
   next();
 })
