@@ -9,7 +9,7 @@ export const urlRoute = Router();
 /**
  * Get urls for user
  */
-urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
+urlRoute.get("/urls/user", async(req: Request, res: Response) => {
 
   const errorMessage = "Missing information for user";
 
@@ -40,45 +40,7 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
 });
 
 
-/**
- * Get url by shortUrl
- * no validation
- */
-urlRoute.get("/urls/:shortUrl", async (req: Request, res: Response) => {
 
-  const errorMessage = "Missing information for url";
-
-  try {
-    // const ip = "127.0.0.1";
-    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.body && req.body.token || null;
-    const userId = req.body && req.body.userId || null;
-    const shortUrl = req.body && req.body.shortUrl || null;
-    
-    if (!ip) throw new Error(errorMessage);
-    if (!authToken) return new Error(errorMessage);
-    if (!userId) return new Error(errorMessage);
-    if (!shortUrl) return new Error(errorMessage);
-
-
-    // athenticate token user
-    const userData: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
-
-    // if not athenticated throw error
-    if (!userData) throw new Error(errorMessage);
-
-    // receives a shoten url from an anonymous user
-    const longUrlData = await getUrlByShortUrl(shortUrl, null)
-        
-    // TODO: add DTO
-    // to return empty array value if there are not values
-    res.json({ message: "success", data: longUrlData});
-
-  } catch (error: any) {
-    console.error(error);
-    res.json({ message: errorMessage });
-  }
-});
 
 /**
  * Get url by shortendid
@@ -168,29 +130,40 @@ urlRoute.get("/urls/new", async (req: Request, res: Response) => {
   const errorMessage = "Missing information for creating short url";
 
   try {
-    // const ip = "127.0.0.1";
-    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.body && req.body.token || null;
-    const userId = req.body && req.body.userId || null;
-    const longUrl = req.body && req.body.longURL || null;
+    const ip = "127.0.0.1";
+    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    // const authToken = req.body && req.body.token || null;
+    // const userId = req.body && req.body.userId || null;
+    // const longUrl = req.body && req.body.longURL || null;
+
+    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoibmljayIsImxhc3ROYW1lIjoic2FnaWFzIiwiZW1haWwiOiJteUVhbWlsQGdtYWlsIiwiZW1haWxWZXJpZmllZCI6bnVsbCwiYWN0aXZlIjp0cnVlLCJpYXQiOjE2ODA2NjUyNzZ9.XtVKLCFYDNevbGTZBbgYRPHaMcVVMuqMrTLHFKxClPQ";
+    const userId = "1";
+    const longUrl = "https://www.bingo.com"
     
     if (!ip) throw new Error(errorMessage);
-    if (!authToken) return new Error(errorMessage);
-    if (!userId) return new Error(errorMessage);
-    if (!longUrl) return new Error(errorMessage);
+    console.log("HERE")
+    if (!authToken) return new Error(`${errorMessage} 1`);
+    if (!userId) return new Error(`${errorMessage} 2`);
+    if (!longUrl) return new Error(`${errorMessage} 3`);
 
+    console.log("IP", ip)
+    console.log("AUTH TOKEN", authToken)
+    console.log("userId", userId)
+    console.log("LONG URL", longUrl)
    
     // athenticate token user
-    const userData: IToken = authenticateTokenUser(userId, ip, authToken) as IToken;
+    const userData: IToken = await authenticateTokenUser(userId, ip, authToken) as IToken;
+    console.log("user Data", userData)
 
     // if not athenticated throw error
-    if(!userData) throw new Error(errorMessage);
-    
+    if(!userData) throw new Error(`${errorMessage} 4`);
+
     // check if long name already exists
     const existingLongUrl = await getUrlByLongUrl(longUrl, userData.userId?.toString()!);
 
     // if not existing through error
-    if (existingLongUrl)  throw new Error(errorMessage);
+    if (existingLongUrl)  throw new Error(`${errorMessage} 5`);
     
     // receives a shoten url from an anonymous user
     const longUrlData = await createShortUrl(longUrl, userData.userId?.toString()!);
@@ -201,8 +174,47 @@ urlRoute.get("/urls/new", async (req: Request, res: Response) => {
 
   } catch (error: any) {
     console.error(error);
-    res.json({ message: errorMessage});
+    res.json({ message: `${errorMessage} 6`});
   }
 });
 
 
+/**
+ * Get url by shortUrl
+ * no validation
+ */
+urlRoute.get("/urls/user/:shortUrl", async (req: Request, res: Response) => {
+
+  const errorMessage = "Missing information for url";
+
+  try {
+    // const ip = "127.0.0.1";
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = req.body && req.body.token || null;
+    const userId = req.body && req.body.userId || null;
+    const shortUrl = req.body && req.body.shortUrl || null;
+    
+    if (!ip) throw new Error(errorMessage);
+    if (!authToken) return new Error(errorMessage);
+    if (!userId) return new Error(errorMessage);
+    if (!shortUrl) return new Error(errorMessage);
+
+
+    // athenticate token user
+    const userData: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
+
+    // if not athenticated throw error
+    if (!userData) throw new Error(errorMessage);
+
+    // receives a shoten url from an anonymous user
+    const longUrlData = await getUrlByShortUrl(shortUrl, null)
+        
+    // TODO: add DTO
+    // to return empty array value if there are not values
+    res.json({ message: "success", data: longUrlData});
+
+  } catch (error: any) {
+    console.error(error);
+    res.json({ message: errorMessage });
+  }
+});
