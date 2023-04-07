@@ -5,6 +5,7 @@ import { IUser } from "../DAL/types/user";
 import { createUser, getUserByEmail } from "../DAL/userData";
 import jwt, { verify } from 'jsonwebtoken';
 import { getUrlByShortUrl } from "../DAL/urlData";
+import { isDeepEqual } from "./utilsService";
 dotenv.config();
 
 /**
@@ -46,9 +47,8 @@ export const authenticateToken = async (token: any): Promise<string | jwt.JwtPay
  * @returns token or null
  */
 export const authenticateTokenUser = async (userId: string, ip: string, authToken: any): Promise<string | jwt.JwtPayload | null> => {
-
   // get existing token record and validate user provider token
-  const existingTokenRecord = await getTokenByUserIdAndIp(userId, ip);
+  const existingTokenRecord = await getTokenByUserIdAndIp(userId.toString(), ip);
   const authenticatedAuthToken = await authenticateToken(authToken);
 
   // Check if values are null and return null if so
@@ -58,7 +58,8 @@ export const authenticateTokenUser = async (userId: string, ip: string, authToke
   const existingTokenRecordData = await authenticateToken(existingTokenRecord?.authToken);
 
   // if token values match return the authenticated token
-  if (existingTokenRecordData === authenticatedAuthToken) return authenticatedAuthToken;
+  const tokensMatch = isDeepEqual(existingTokenRecordData, authenticatedAuthToken);
+  if (tokensMatch) return authenticatedAuthToken;
 
   return null;
 };
