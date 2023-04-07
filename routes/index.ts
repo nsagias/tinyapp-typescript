@@ -9,4 +9,4 @@ export const routes = Router();
 routes.use(authRoute);
 routes.use(rootRoute);
 routes.use(userRoute);
-routes.use("/api/",urlRoute);
+routes.use(urlRoute);
