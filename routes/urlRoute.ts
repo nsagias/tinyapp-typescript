@@ -1,5 +1,7 @@
 import { Router, Request, Response } from "express";
 import { createShortUrl, deleteByShortUrl, getUrlByShortUrl, getUrlByLongUrl, getUrlsByUserId}   from "../DAL/urlData";
+import { authenticateTokenUser } from "../services/authService";
+import { IToken } from "../DAL/types/token";
 
 
 export const urlRoute = Router();
@@ -13,6 +15,7 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
 
   try {
     const ip = "127.0.0.1";
+  
     // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
     if (!ip) throw new Error(errorMessage);
 
@@ -83,7 +86,6 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     const shortUrl= req.body && req.body.shortUrl || null; // use body from form
     const cookieUserId = req.cookies && req.cookies.userID && parseInt(req.cookies.userID, 10) || null;
 
-
     if (!shortUrl)  throw new Error(errorMessage);
     if (!cookieUserId) throw new Error(errorMessage);
     
@@ -140,29 +142,36 @@ urlRoute.get("/urls/new", async (req: Request, res: Response) => {
   const errorMessage = "Missing information for creating short url";
 
   try {
-    const ip = "127.0.0.1";
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    // const ip = "127.0.0.1";
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = req.body && req.body.token || null;
+    const userId = req.body && req.body.userId || null;
+    const longUrl = req.body && req.body.longURL || null;
+    
     if (!ip) throw new Error(errorMessage);
+    if (!authToken) return new Error(errorMessage);
+    if (!userId) return new Error(errorMessage);
+    if (!longUrl) return new Error(errorMessage);
 
-    const longURL = req.params && req.params.longUrl || null; // do not use params
-    // const longURL = req.body && req.body.longURL || null;
-    const userData = req.cookies && req.cookies.userID  && parseInt(req.cookies.userID, 10) || null; // update with token info
+   
+    // athenticate token user
+    const userData: IToken = authenticateTokenUser(userId, ip, authToken) as IToken;
 
-    // t oken info
-    if (!longURL)  throw new Error(errorMessage);
-    if (!userData) throw new Error(errorMessage);
-
+    // if not athenticated throw error
+    if(!userData) throw new Error(errorMessage);
+    
     // check if long name already exists
-    const existingLongURL = await getUrlByLongUrl(longURL, userData.id);
+    const existingLongUrl = await getUrlByLongUrl(longUrl, userData.userId?.toString()!);
 
-    if (existingLongURL)  throw new Error(errorMessage);
+    // if not existing through error
+    if (existingLongUrl)  throw new Error(errorMessage);
     
     // receives a shoten url from an anonymous user
-    const longURLData = await createShortUrl(longURL, userData.id);
-    if (!longURLData ) return res.json({ message: errorMessage});
+    const longUrlData = await createShortUrl(longUrl, userData.userId?.toString()!);
+    if (!longUrlData ) return res.json({ message: errorMessage});
         
     // TODO: add DTO
-    res.json({ message: "success", data: longURLData});
+    res.json({ message: "success", data: longUrlData});
 
   } catch (error: any) {
     console.error(error);
