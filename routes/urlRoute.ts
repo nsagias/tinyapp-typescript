@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { createShortUrl, deleteByShortUrl, getUrlByShortUrl, getUrlByLongUrl, getUrlsByUserId}   from "../DAL/urlData";
-import { authenticateTokenUser } from "../services/authService";
+import { authenticateShortUrlBelongsToUser, authenticateTokenUser } from "../services/authService";
 import { IToken } from "../DAL/types/token";
 
 
@@ -14,18 +14,21 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
   const errorMessage = "Missing information for user";
 
   try {
-    const ip = "127.0.0.1";
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = req.body && req.body.token || null;
+    const userId = req.body && req.body.userId || null;
   
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
     if (!ip) throw new Error(errorMessage);
+    if (!authToken) return new Error(errorMessage);
+    if (!userId) return new Error(errorMessage);
+ 
+    // athenticate token user
+    const userData: IToken = authenticateTokenUser(userId, ip, authToken) as IToken;
 
-    const userId = req.params && req.params.userId && parseInt(req.params.userId, 10) || null;
-    const cookieUserId = req.cookies && req.cookies.userID && parseInt(req.cookies.userID, 10) || null;
-  
-    if (!userId) throw new Error(errorMessage);
-    if (!cookieUserId) throw new Error(errorMessage);
+    // if not athenticated throw error
+    if (!userData) throw new Error(errorMessage);
 
-    const urls = await getUrlsByUserId(cookieUserId);
+    const urls = await getUrlsByUserId( userData.userId?.toString()!);
    
     // TODO: DTO
     res.json({ message: "success",  data: urls });
@@ -38,7 +41,7 @@ urlRoute.get("/urls/:userId", async(req: Request, res: Response) => {
 
 
 /**
- * Get url by shortendid
+ * Get url by shortUrl
  * no validation
  */
 urlRoute.get("/urls/:shortUrl", async (req: Request, res: Response) => {
@@ -46,22 +49,30 @@ urlRoute.get("/urls/:shortUrl", async (req: Request, res: Response) => {
   const errorMessage = "Missing information for url";
 
   try {
-    const ip = "127.0.0.1";
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    if (!ip) throw new Error(errorMessage);
-
-    const shortUrl = req.params && req.params.shortUrl || null;
-    const cookieUserId = req.cookies && req.cookies.userID && parseInt(req.cookies.userID, 10) || null;
-
-
-    if (!shortUrl)  throw new Error(errorMessage);
-    if (!cookieUserId) throw new Error(errorMessage);
+    // const ip = "127.0.0.1";
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = req.body && req.body.token || null;
+    const userId = req.body && req.body.userId || null;
+    const shortUrl = req.body && req.body.shortUrl || null;
     
+    if (!ip) throw new Error(errorMessage);
+    if (!authToken) return new Error(errorMessage);
+    if (!userId) return new Error(errorMessage);
+    if (!shortUrl) return new Error(errorMessage);
+
+
+    // athenticate token user
+    const userData: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
+
+    // if not athenticated throw error
+    if (!userData) throw new Error(errorMessage);
+
     // receives a shoten url from an anonymous user
-    const longURLData = await getUrlByShortUrl(shortUrl, null)
+    const longUrlData = await getUrlByShortUrl(shortUrl, null)
         
     // TODO: add DTO
-    res.json({ message: "success", data: longURLData});
+    // to return empty array value if there are not values
+    res.json({ message: "success", data: longUrlData});
 
   } catch (error: any) {
     console.error(error);
@@ -79,16 +90,24 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
   const errorMessage = "Missing information for update";
 
   try {
-    const ip = "127.0.0.1";
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    // const ip = "127.0.0.1";
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = req.body && req.body.token || null;
+    const userId = req.body && req.body.userId || null;
+    const shortUrl = req.body && req.body.shortUrl || null;
+    
     if (!ip) throw new Error(errorMessage);
-    
-    const shortUrl= req.body && req.body.shortUrl || null; // use body from form
-    const cookieUserId = req.cookies && req.cookies.userID && parseInt(req.cookies.userID, 10) || null;
+    if (!authToken) return new Error(errorMessage);
+    if (!userId) return new Error(errorMessage);
+    if (!shortUrl) return new Error(errorMessage);
 
-    if (!shortUrl)  throw new Error(errorMessage);
-    if (!cookieUserId) throw new Error(errorMessage);
-    
+
+    // athenticate token user
+    const userData: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
+
+    // if not athenticated throw error
+    if (!userData) throw new Error(errorMessage);
+
     // receives a shoten url from an anonymous user
     const longURLData = await getUrlByShortUrl(shortUrl, null)
     if (!longURLData) throw new Error(errorMessage);
@@ -110,18 +129,25 @@ urlRoute.get("/urls/delete", async (req: Request, res: Response) => {
   const errorMessage = "Missing information for deleting url";
 
   try {
-    // TODO: update before
-    const ip = "127.0.0.1";
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    // const ip = "127.0.0.1";
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = req.body && req.body.token || null;
+    const userId = req.body && req.body.userId || null;
+    const shortUrl = req.body && req.body.shortUrl || null;
+    
     if (!ip) throw new Error(errorMessage);
+    if (!authToken) return new Error(errorMessage);
+    if (!userId) return new Error(errorMessage);
+    if (!shortUrl) return new Error(errorMessage);
 
-    const shortUrl= req.body && req.body.shortUrl || null; // use body from form
-    const userData = req.cookies && req.cookies.userID && parseInt(req.cookies.userID) || null;
+ 
+    // athenticate token user
+    const userData: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
 
-    if (!shortUrl)  throw new Error(errorMessage);
+    // if not athenticated throw error
     if (!userData) throw new Error(errorMessage);
 
-    const isDeleted = await deleteByShortUrl(shortUrl, userData.id);
+    const isDeleted = await deleteByShortUrl(shortUrl, userData.userId?.toString()!);
 
     if (isDeleted) return res.json({ message: true});
     
