@@ -137,40 +137,41 @@ urlRoute.get("/urls/new", async (req: Request, res: Response) => {
     // const longUrl = req.body && req.body.longURL || null;
 
     // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoibmljayIsImxhc3ROYW1lIjoic2FnaWFzIiwiZW1haWwiOiJteUVhbWlsQGdtYWlsIiwiZW1haWxWZXJpZmllZCI6bnVsbCwiYWN0aXZlIjp0cnVlLCJpYXQiOjE2ODA2NjUyNzZ9.XtVKLCFYDNevbGTZBbgYRPHaMcVVMuqMrTLHFKxClPQ";
+    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoibmljayIsImxhc3ROYW1lIjoic2FnaWFzIiwiZW1haWwiOiJteUVhbWlsQGdtYWlsIiwiZW1haWxWZXJpZmllZCI6bnVsbCwiYWN0aXZlIjp0cnVlLCJpYXQiOjE2ODA2NjQ2ODZ9.hjIgD9lyXP4VWY6vVfyyXLekqEK3DBsqgyHarvU2YZI";
     const userId = "1";
     const longUrl = "https://www.bingo.com"
     
     if (!ip) throw new Error(errorMessage);
-    console.log("HERE")
     if (!authToken) return new Error(`${errorMessage} 1`);
     if (!userId) return new Error(`${errorMessage} 2`);
     if (!longUrl) return new Error(`${errorMessage} 3`);
 
-    console.log("IP", ip)
-    console.log("AUTH TOKEN", authToken)
-    console.log("userId", userId)
-    console.log("LONG URL", longUrl)
+    // console.log("IP", ip)
+    // console.log("AUTH TOKEN", authToken)
+    // console.log("userId", userId)
+    // console.log("LONG URL", longUrl)
    
     // athenticate token user
     const userData: IToken = await authenticateTokenUser(userId, ip, authToken) as IToken;
-    console.log("user Data", userData)
 
     // if not athenticated throw error
     if(!userData) throw new Error(`${errorMessage} 4`);
 
     // check if long name already exists
-    const existingLongUrl = await getUrlByLongUrl(longUrl, userData.userId?.toString()!);
+    const existingLongUrl = await getUrlByLongUrl(userData.id?.toString()!, longUrl);
 
     // if not existing through error
-    if (existingLongUrl)  throw new Error(`${errorMessage} 5`);
+    if (!existingLongUrl)  {
+      // receives a shoten url from an anonymous user
+      const longUrlData = await createShortUrl(longUrl, userData.id?.toString()!);
+      if (!longUrlData ) return res.json({ message: errorMessage});
+          
+      // TODO: add DTO
+      res.json({ message: "success", data: longUrlData});
+    } 
     
-    // receives a shoten url from an anonymous user
-    const longUrlData = await createShortUrl(longUrl, userData.userId?.toString()!);
-    if (!longUrlData ) return res.json({ message: errorMessage});
-        
-    // TODO: add DTO
-    res.json({ message: "success", data: longUrlData});
+    res.json({ message: "existing long url"})
+    
 
   } catch (error: any) {
     console.error(error);
