@@ -1,6 +1,8 @@
 import { Op } from "sequelize";
 import { UrlModel } from "../models/UrlModel";
 import { idGenerator } from "../services/utilsService";
+import { IToken } from "./types/token";
+import { IUrlModel } from "./types/urlModel";
 
 
 
@@ -41,7 +43,7 @@ export const getUrlByShortUrl = async (shortUrl: string, userId?: string | null)
  * @returns {boolean}
  */
 export const getUrlByLongUrl = async (userId: string, longUrl: string): Promise<boolean> => { 
-  const existingUrl = await UrlModel.findOne({ 
+  const existingUrl: UrlModel | null = await UrlModel.findOne({ 
     where : { 
       userId, 
       longUrl, 
