@@ -5,7 +5,8 @@ import { IUser } from "../DAL/types/user";
 import { createUser, getUserByEmail } from "../DAL/userData";
 import jwt, { verify } from 'jsonwebtoken';
 import { getUrlByShortUrl } from "../DAL/urlData";
-import { isDeepEqual } from "./utilsService";
+
+import deepEqual from "deep-equal"
 dotenv.config();
 
 /**
@@ -58,7 +59,7 @@ export const authenticateTokenUser = async (userId: string, ip: string, authToke
   const existingTokenRecordData = await authenticateToken(existingTokenRecord?.authToken);
 
   // if token values match return the authenticated token
-  const tokensMatch = isDeepEqual(existingTokenRecordData, authenticatedAuthToken);
+  const tokensMatch = deepEqual(existingTokenRecordData, authenticatedAuthToken);
   if (tokensMatch) return authenticatedAuthToken;
 
   return null;
