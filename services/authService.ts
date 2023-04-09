@@ -178,18 +178,13 @@ export const createAndLoginUser = async(firstName: string, lastName: string, ema
  * @param token 
  * @returns boolean or null
  */
-export const logout = async (email: string, ip: string, token: any): Promise<boolean | null> => {
-
-  // chech if user exist by email
-  const user: IUser | null = await getUserByEmail(email);
-
-  if (!user) return null;
+export const logout = async (ip: string, token: any): Promise<boolean | null> => {
 
   // get token data
   const tokenData = await authenticateToken(token) as IUser;
 
   // if email matches token delete token else return null
-  if (tokenData) return await checkTokenForIpAndDelete (user.id?.toString()!, ip);
+  if (tokenData) return await checkTokenForIpAndDelete (tokenData.id?.toString()!, ip);
 
   return null;
 };
