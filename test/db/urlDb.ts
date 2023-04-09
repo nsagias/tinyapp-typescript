@@ -1,4 +1,4 @@
-import { IUrlModel } from "../../DAL/types/urlModel";
+import { IUrlModel } from "../../models/types/urlModel";
 
 export let urlData: IUrlModel[] = [
   { 

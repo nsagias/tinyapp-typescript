@@ -1,5 +1,5 @@
 import bcrypt2 from "bcryptjs";
-import { IUser } from "../../DAL/types/user";
+import { IUser } from "../../models/types/user";
 
 export let users: IUser[] = [
    {
