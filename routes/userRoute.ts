@@ -10,14 +10,13 @@ userRoute.post("/register", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
- 
     if (!ip) throw new Error(errorMessage);
 
     // Check for body 
-    const firstName = req.body && req.body.firstName || null;
-    const lastName = req.body && req.body.lastName || null;
-    const email = req.body && req.body.email || null;
-    const password = req.body && req.body.password || null;
+    const firstName = await req.body && req.body.firstName || null;
+    const lastName = await req.body && req.body.lastName || null;
+    const email = await req.body && req.body.email || null;
+    const password = await req.body && req.body.password || null;
     
   
     // check for empty strings
@@ -49,8 +48,8 @@ userRoute.post("/login", async(req: Request, res: Response) => {
 
     // Check for body 
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const email = req.body && req.body.email || null;
-    const password = req.body && req.body.password || null;
+    const email = await req.body && req.body.email || null;
+    const password = await req.body && req.body.password || null;
 
     if (!ip) throw new Error(errorMessage);
 
@@ -82,7 +81,7 @@ userRoute.post("/logout", async (req: Request, res: Response) => {
   // find token and logout token
 
   try {
-    const token = req.body && req.body.token || null;
+    const token = await req.body && req.body.token || null;
     if (!token) return res.json({ message: errorMessage});
 
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;

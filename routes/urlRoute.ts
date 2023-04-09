@@ -15,7 +15,7 @@ urlRoute.get("/urls/users/:userId", async(req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.body && req.body.token || null;
+    const authToken = await req.body && req.body.token || null;
     const userId = req.params && req.params.userId || null;
 
     if (!ip) throw new Error(errorMessage);
@@ -50,9 +50,9 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.body && req.body.token || null;
-    const userId = req.body && req.body.userId || null;
-    const shortUrl = req.body && req.body.shortUrl || null;
+    const authToken = await req.body && req.body.token || null;
+    const userId = await req.body && req.body.userId || null;
+    const shortUrl = await req.body && req.body.shortUrl || null;
     
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(errorMessage);
@@ -122,9 +122,9 @@ urlRoute.post("/urls/new", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.body && req.body.token || null;
-    const userId = req.body && req.body.userId || null;
-    const longUrl = req.body && req.body.longUrl|| null;
+    const authToken = await req.body && req.body.token || null;
+    const userId = await req.body && req.body.userId || null;
+    const longUrl = await req.body && req.body.longUrl|| null;
     
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(`${errorMessage} 1`);
@@ -169,7 +169,7 @@ urlRoute.get("/urls/users/:userId/shortUrl/:shortUrl", async (req: Request, res:
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.body && req.body.token || null;
+    const authToken = await req.body && req.body.token || null;
     const userId = req.params && req.params.userId || null;
     const shortUrl = req.params && req.params.shortUrl || null;
     
