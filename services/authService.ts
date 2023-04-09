@@ -5,8 +5,8 @@ import { IUser } from "../DAL/types/user";
 import { createUser, getUserByEmail } from "../DAL/userData";
 import jwt, { verify } from 'jsonwebtoken';
 import { getUrlByShortUrl } from "../DAL/urlData";
+import deepEqual from "deep-equal";
 
-import deepEqual from "deep-equal"
 dotenv.config();
 
 /**
@@ -117,7 +117,7 @@ export const checkPassword = async (email: string, password: string): Promise<bo
 export const login = async (email: string, password: string, ip: string) => {
   // login section
   const user: IUser | null = await getUserByEmail(email);
-
+ 
   if (!user) return null;
 
   // check if valid password
@@ -130,7 +130,7 @@ export const login = async (email: string, password: string, ip: string) => {
 
   // TODO: Refacter into DTO converter
   const userInfo: IUser | null = {
-    id: user.id, 
+    id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
@@ -142,6 +142,9 @@ export const login = async (email: string, password: string, ip: string) => {
   const token = await createAccessToken(userInfo, ip);
 
   if (!token) return null;
+
+  // TODO: DTO
+  // return user and token info 
   const authData = { token, userInfo };
   return authData;
 
