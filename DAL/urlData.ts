@@ -116,9 +116,9 @@ export const deleteByShortUrl = async (shortUrl:string, userId: string): Promise
   const existingUrl: UrlModel | null = await getUrlByShortUrl(shortUrl, userId);
  
   // if doesn't exist return true
-  if ( existingUrl && existingUrl.userId.toString() === userId.toString()) {
-    await existingUrl.set( {deletedAt: new Date()} );
-    await existingUrl.save();
+  if (!(existingUrl && existingUrl!.userId === userId)) {
+    await existingUrl!.set( { deletedAt: new Date() } );
+    await existingUrl!.save();
     return true;
   }
   return false;
