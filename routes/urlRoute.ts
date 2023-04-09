@@ -52,7 +52,6 @@ urlRoute.get("/urls/user", async(req: Request, res: Response) => {
  * udpate path
  */
 urlRoute.post("/urls/update", async (req: Request, res: Response) => {
-
   const errorMessage = "Missing information for update";
 
   try {
@@ -66,7 +65,6 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     if (!authToken) return new Error(errorMessage);
     if (!userId) return new Error(errorMessage);
     if (!shortUrl) return new Error(errorMessage);
-
 
     // athenticate token user
     const belongsToUser: boolean = await authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as boolean;
@@ -89,35 +87,26 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
 
 
 
-// urlRoute.post
-urlRoute.get("/urls/delete", async (req: Request, res: Response) => {
-
+urlRoute.post("/urls/delete", async (req: Request, res: Response) => {
   const errorMessage = "Missing information for deleting url";
 
   try {
-    const ip = "127.0.0.1";
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    // const authToken = req.body && req.body.token || null;
-    // const userId = req.body && req.body.userId || null;
-    // const shortUrl = req.body && req.body.shortUrl || null;
-
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoibmljayIsImxhc3ROYW1lIjoic2FnaWFzIiwiZW1haWwiOiJteUVhbWlsQGdtYWlsIiwiZW1haWxWZXJpZmllZCI6bnVsbCwiYWN0aXZlIjp0cnVlLCJpYXQiOjE2ODA2NjQ2ODZ9.hjIgD9lyXP4VWY6vVfyyXLekqEK3DBsqgyHarvU2YZI";
-    const userId = "1";
-    const shortUrl = "cc8032"; 
-    
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = await req.body && req.body.token;
+    const userId = await req.body && req.body.userId;
+    const shortUrl = await req.body && req.body.shortUrl;
     
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(`${errorMessage} 1`);
     if (!userId) return new Error(`${errorMessage} 2`);
     if (!shortUrl) return new Error(`${errorMessage} 3`);
-
-
+  
     // athenticate token user
     const belongsToUser: boolean = await authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as boolean;
 
     // if not athenticated throw error
     if (!belongsToUser) throw new Error(`${errorMessage} 4`);;
-
+ 
     const isDeleted = await deleteByShortUrl(shortUrl, null);
 
     if (isDeleted) return res.json({ message: true});
