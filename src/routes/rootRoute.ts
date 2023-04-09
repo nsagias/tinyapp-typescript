@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { getUrlByShortUrl, updateUrlById }   from "../../DAL/urlDAL";
+import { getUrlByShortUrl, updateUrlById }   from "../DAL/urlDAL";
 import { UrlModel } from "../models";
 export const rootRoute = Router();
 
