@@ -3,7 +3,7 @@ import { IToken } from "../models/types/token";
 import dotenv from "dotenv";
 import jwt from 'jsonwebtoken';
 import { Op } from "sequelize";
-import { IUser } from "./types/user";
+import { IUser } from "../models/types/user";
 dotenv.config();
 
 
