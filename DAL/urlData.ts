@@ -110,10 +110,10 @@ export const updateUrlById = async (id: number, values: Partial<UrlModel>): Prom
  * @param userId 
  * @returns 
  */
-export const deleteByShortUrl = async (shortUrl:string, userId: string): Promise<boolean> => {
+export const deleteByShortUrl = async (shortUrl:string, userId: string | null): Promise<boolean> => {
 
   // confirm existing url
-  const existingUrl: UrlModel | null = await getUrlByShortUrl(shortUrl, userId);
+  const existingUrl: UrlModel | null = await getUrlByShortUrl(shortUrl, null);
  
   // if deleted return true
   if (existingUrl!.userId) {
