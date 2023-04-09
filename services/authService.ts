@@ -162,15 +162,16 @@ export const login = async (email: string, password: string, ip: string) => {
 export const createAndLoginUser = async(firstName: string, lastName: string, email: string, password: string, ip: string) => {
   // check if existing user
   const userExist: IUser | null = await getUserByEmail(email);
-
+ 
   if (userExist) return null;
     
   // create new user
   const newUser = await createUser(firstName, lastName, email, password);
-
   if (!newUser) return null;
 
-  return await login(email, password, ip);
+  const loggedIn = await login(email, password, ip);
+
+  return loggedIn;
 };
 
 
