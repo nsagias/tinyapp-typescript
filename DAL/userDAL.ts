@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import { User } from "../models";
-import { IUser } from "../DAL/types/user";
+import { IUser } from "../models/types/user";
 import { hashPassword } from "../services/authService";
 
 
