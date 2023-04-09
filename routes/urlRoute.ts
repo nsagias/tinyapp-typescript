@@ -2,6 +2,8 @@ import { Router, Request, Response } from "express";
 import { createShortUrl, deleteByShortUrl, getUrlByShortUrl, getUrlByLongUrl, getUrlsByUserId}   from "../DAL/urlData";
 import { authenticateShortUrlBelongsToUser, authenticateTokenUser } from "../services/authService";
 import { IToken } from "../DAL/types/token";
+import { updateUrlById } from "../DAL/urlData";
+import { UrlModel } from "../models";
 
 
 export const urlRoute = Router();
@@ -53,6 +55,7 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     const authToken = await req.body && req.body.token || null;
     const userId = await req.body && req.body.userId || null;
     const shortUrl = await req.body && req.body.shortUrl || null;
+    const updatedUrlData = await req.body && req.body.updatedUrlData || null;
     
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(errorMessage);
@@ -66,18 +69,21 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     if (!belongsToUser) throw new Error(errorMessage);
 
     // receives a shoten url from an anonymous user
-    const longURLData = await getUrlByShortUrl(shortUrl, null);
-    if (!longURLData) throw new Error(errorMessage);
-        
-    // TODO: add DTO
-    res.json({ message: "success", data: longURLData});
+    const longUrlData = await getUrlByShortUrl(shortUrl, null);
+    if (!longUrlData) throw new Error(errorMessage);
 
+   
+    const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl: updatedUrlData})
+    if (updatedLongUrlData) {
+        return res.json({ message: "success"});
+    }
+    return res.json({ message: errorMessage});
+   
   } catch (error: any) {
     console.error(error);
     res.json({ message: errorMessage});
   }
 });
-
 
 
 urlRoute.post("/urls/delete", async (req: Request, res: Response) => {
