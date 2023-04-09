@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import logger from "morgan";
 import cors from "cors";
-import { routes } from './routes';
+import { routes } from './src/routes';
 import db from "./databases/sequelize/db";
 import { initModels } from './models'
 
