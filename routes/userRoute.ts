@@ -3,31 +3,23 @@ import { createAndLoginUser, login, logout } from "../services/authService";
 
 export const userRoute = Router();
 
-// userRoute.post
-userRoute.get("/register", async (req: Request, res: Response) => {
+
+userRoute.post("/register", async (req: Request, res: Response) => {
 
   const errorMessage = "Account creation error";
 
   try {
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const ip = "127.0.0.1";
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+ 
     if (!ip) throw new Error(errorMessage);
 
-
-
-    const email = "bobEmail@example.com"; // new user user
-    const password = "abc123";
-    const firstName = "bobFirstName";
-    const lastName = "bobLastName";
-
     // Check for body 
-    // const firstName = req.body && req.body.firstName || null;
-    // const lastName = req.body && req.body.lastName || null;
-    // const email = req.body && req.body.email || null;
-    // const password = req.body && req.body.password || null;
+    const firstName = req.body && req.body.firstName || null;
+    const lastName = req.body && req.body.lastName || null;
+    const email = req.body && req.body.email || null;
+    const password = req.body && req.body.password || null;
     
   
-
     // check for empty strings
     const parsedEmail = email && email.trim();
     const parsedPassword = password && password.trim();
@@ -49,22 +41,17 @@ userRoute.get("/register", async (req: Request, res: Response) => {
 
 
 
-// app.post
-userRoute.get("/login", async(req: Request, res: Response) => {
+userRoute.post("/login", async(req: Request, res: Response) => {
 
   const errorMessage = "Login error";
 
   try {
 
     // Check for body 
-    const email = "red@example.com";
-    const password = "abc123";
-    const ip = "127.0.0.1";
-    // const email = req.body && req.body.email || null;
-    // const password = req.body && req.body.password || null;
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const email = req.body && req.body.email || null;
+    const password = req.body && req.body.password || null;
 
- 
     if (!ip) throw new Error(errorMessage);
 
     const parsedEmail = email && email.trim();
@@ -104,8 +91,14 @@ userRoute.post("/logout", async (req: Request, res: Response) => {
     if (!ip) return res.json({ message: errorMessage});
 
     // token verify and get email from token
-    // await logout("email", ip);
-    res.json({ message: "logged out"})
+  
+    const isLoggedOut = await  logout(ip, token);
+    
+    if (isLoggedOut) {
+      return res.json({ message: "logged out successfully" })
+    }
+    
+    res.json({ message: errorMessage })
       
     } catch (error: any) {
       console.error("ERROR",error);
