@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { createAndLoginUser, login, logout } from "../services/authService";
+import { createAndLoginUser, login, logout } from "../src/services/authService";
 
 export const userRoute = Router();
 

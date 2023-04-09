@@ -1,7 +1,7 @@
 import { Op } from "sequelize";
 import { User } from "../models";
 import { IUser } from "../models/types/user";
-import { hashPassword } from "../services/authService";
+import { hashPassword } from "../src/services/authService";
 
 
 /**
