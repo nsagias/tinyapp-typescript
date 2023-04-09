@@ -57,31 +57,31 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     const shortUrl = await req.body && req.body.shortUrl || null;
     const updatedUrlData = await req.body && req.body.updatedUrlData || null;
     
-    if (!ip) throw new Error(errorMessage);
-    if (!authToken) return new Error(errorMessage);
-    if (!userId) return new Error(errorMessage);
-    if (!shortUrl) return new Error(errorMessage);
+    if (!ip) throw new Error(`${errorMessage} 1`);
+    if (!authToken) return new Error(`${errorMessage} 2`);
+    if (!userId) return new Error(`${errorMessage} 3`);
+    if (!shortUrl) return new Error(`${errorMessage} 4`);
 
     // athenticate token user
     const belongsToUser: boolean = await authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as boolean;
 
     // if not athenticated throw error
-    if (!belongsToUser) throw new Error(errorMessage);
+    if (!belongsToUser) throw new Error(`${errorMessage} 5`);
 
     // receives a shoten url from an anonymous user
     const longUrlData = await getUrlByShortUrl(shortUrl, null);
-    if (!longUrlData) throw new Error(errorMessage);
+    if (!longUrlData) throw new Error(`${errorMessage} 6`);
 
    
     const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl: updatedUrlData})
     if (updatedLongUrlData) {
         return res.json({ message: "success"});
     }
-    return res.json({ message: errorMessage});
+    return res.json({ message: `${errorMessage} 7`});
    
   } catch (error: any) {
     console.error(error);
-    res.json({ message: errorMessage});
+    res.json({ message: `${errorMessage} 8`});
   }
 });
 
@@ -132,17 +132,16 @@ urlRoute.post("/urls/new", async (req: Request, res: Response) => {
     const userId = await req.body && req.body.userId || null;
     const longUrl = await req.body && req.body.longUrl|| null;
     
-    if (!ip) throw new Error(errorMessage);
-    if (!authToken) return new Error(`${errorMessage} 1`);
-    if (!userId) return new Error(`${errorMessage} 2`);
-    if (!longUrl) return new Error(`${errorMessage} 3`);
+    if (!ip) throw new Error(`${errorMessage} 1`);
+    if (!authToken) return new Error(`${errorMessage} 2`);
+    if (!userId) return new Error(`${errorMessage} 3`);
+    if (!longUrl) return new Error(`${errorMessage} 4`);
 
 
     // athenticate token user
     const userData: IToken = await authenticateTokenUser(userId, ip, authToken) as IToken;
-
     // if not athenticated throw error
-    if(!userData) throw new Error(`${errorMessage} 4`);
+    if(!userData) throw new Error(`${errorMessage} 5`);
 
     // check if long name already exists
     const existingLongUrl = await getUrlByLongUrl(userData.id?.toString()!, longUrl);
@@ -151,7 +150,7 @@ urlRoute.post("/urls/new", async (req: Request, res: Response) => {
     if (!existingLongUrl)  {
       // receives a shoten url from an anonymous user
       const longUrlData = await createShortUrl(longUrl, userData.id?.toString()!);
-      if (!longUrlData ) return res.json({ message: errorMessage});
+      if (!longUrlData ) return res.json({ message: `${errorMessage} 6`});
           
       // TODO: add DTO
       return res.json({ message: "success", data: longUrlData});
@@ -161,7 +160,7 @@ urlRoute.post("/urls/new", async (req: Request, res: Response) => {
 
   } catch (error: any) {
     console.error(error);
-    res.json({ message: `${errorMessage} 6`});
+    res.json({ message: `${errorMessage} 7`});
   }
 });
 
@@ -179,26 +178,25 @@ urlRoute.get("/urls/users/:userId/shortUrl/:shortUrl", async (req: Request, res:
     const userId = req.params && req.params.userId || null;
     const shortUrl = req.params && req.params.shortUrl || null;
     
-    if (!ip) throw new Error(errorMessage);
-    if (!authToken) return new Error(errorMessage);
-    if (!userId) return new Error(errorMessage);
-    if (!shortUrl) return new Error(errorMessage);
+    if (!ip) throw new Error(`${errorMessage} 1`);
+    if (!authToken) return new Error(`${errorMessage} 2`);
+    if (!userId) return new Error(`${errorMessage} 3`);
+    if (!shortUrl) return new Error(`${errorMessage} 4`);
 
     // athenticate token user
     const belongsToUser: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
 
     // if not athenticated throw error
-    if (!belongsToUser) throw new Error(errorMessage);
+    if (!belongsToUser) throw new Error(`${errorMessage} 5`);
 
     // receives a shoten url from an anonymous user
-    const longUrlData = await getUrlByShortUrl(shortUrl, null)
-        
+    const longUrlData = await getUrlByShortUrl(shortUrl, null) 
     // TODO: add DTO
     // to return empty array value if there are not values
     res.json({ message: "success", data: longUrlData});
 
   } catch (error: any) {
     console.error(error);
-    res.json({ message: errorMessage });
+    res.json({ message: `${errorMessage} 6` });
   }
 });
