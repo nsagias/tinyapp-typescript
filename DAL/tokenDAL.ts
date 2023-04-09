@@ -1,9 +1,9 @@
-import { Token } from "../models";
-import { IToken } from "../models/types/token";
+import { Token } from "../src/models";
+import { IToken } from "../src/models/types/token";
 import dotenv from "dotenv";
 import jwt from 'jsonwebtoken';
 import { Op } from "sequelize";
-import { IUser } from "../models/types/user";
+import { IUser } from "../src/models/types/user";
 dotenv.config();
 
 

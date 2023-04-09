@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { UrlModel } from "../models/UrlModel";
+import { UrlModel } from "../src/models/UrlModel";
 import { idGenerator } from "../src/services/utilsService";
 
 /**

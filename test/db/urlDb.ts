@@ -1,4 +1,4 @@
-import { IUrlModel } from "../../models/types/urlModel";
+import { IUrlModel } from "../../src/models/types/urlModel";
 
 export let urlData: IUrlModel[] = [
   { 

@@ -7,7 +7,7 @@ import logger from "morgan";
 import cors from "cors";
 import { routes } from './src/routes';
 import db from "./databases/sequelize/db";
-import { initModels } from './models'
+import { initModels } from './src/models'
 
 dotenv.config();
 
