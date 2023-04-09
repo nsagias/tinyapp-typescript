@@ -97,14 +97,14 @@ export const createShortUrl = async (longUrl: string, userId: string): Promise<U
  * @param values
  * @returns boolean
  */
-export const updateUrlById = async (id: number, values: Partial<UrlModel>): Promise<boolean>  => {
-  const user = await UrlModel.findByPk(id);
-  if (!user) return false;
+export const updateUrlById = async (id: number, values: Partial<UrlModel>): Promise<UrlModel | null>  => {
+  const url = await UrlModel.findByPk(id);
+  if (!url) return null;
  
-  await user.set(values);
-  await user.save();
+  await url.set(values);
+  await url.save();
  
-  return true;
+  return url;
  };
 
 
