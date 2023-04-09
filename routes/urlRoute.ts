@@ -40,8 +40,6 @@ urlRoute.get("/urls/users/:userId", async(req: Request, res: Response) => {
 });
 
 
-
-
 /**
  * Get url by shortendid
  * no validation
@@ -118,21 +116,15 @@ urlRoute.post("/urls/delete", async (req: Request, res: Response) => {
 
 // urlRoute.post
 // new routes urls routes
-urlRoute.get("/urls/new", async (req: Request, res: Response) => {
+urlRoute.post("/urls/new", async (req: Request, res: Response) => {
 
   const errorMessage = "Missing information for creating short url";
 
   try {
-    const ip = "127.0.0.1";
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    // const authToken = req.body && req.body.token || null;
-    // const userId = req.body && req.body.userId || null;
-    // const longUrl = req.body && req.body.longURL || null;
-
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoibmljayIsImxhc3ROYW1lIjoic2FnaWFzIiwiZW1haWwiOiJteUVhbWlsQGdtYWlsIiwiZW1haWxWZXJpZmllZCI6bnVsbCwiYWN0aXZlIjp0cnVlLCJpYXQiOjE2ODA2NjQ2ODZ9.hjIgD9lyXP4VWY6vVfyyXLekqEK3DBsqgyHarvU2YZI";
-    const userId = "1";
-    const longUrl = "https://www.bingo.com"
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = req.body && req.body.token || null;
+    const userId = req.body && req.body.userId || null;
+    const longUrl = req.body && req.body.longUrl|| null;
     
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(`${errorMessage} 1`);
@@ -156,11 +148,10 @@ urlRoute.get("/urls/new", async (req: Request, res: Response) => {
       if (!longUrlData ) return res.json({ message: errorMessage});
           
       // TODO: add DTO
-      res.json({ message: "success", data: longUrlData});
+      return res.json({ message: "success", data: longUrlData});
     } 
     
     res.json({ message: "existing long url"})
-    
 
   } catch (error: any) {
     console.error(error);
@@ -171,24 +162,21 @@ urlRoute.get("/urls/new", async (req: Request, res: Response) => {
 
 /**
  * Get url by shortUrl
- * no validation
  */
-urlRoute.get("/urls/user/:shortUrl", async (req: Request, res: Response) => {
+urlRoute.get("/urls/users/:userId/shortUrl/:shortUrl", async (req: Request, res: Response) => {
 
   const errorMessage = "Missing information for url";
 
   try {
-    // const ip = "127.0.0.1";
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
     const authToken = req.body && req.body.token || null;
-    const userId = req.body && req.body.userId || null;
-    const shortUrl = req.body && req.body.shortUrl || null;
+    const userId = req.params && req.params.userId || null;
+    const shortUrl = req.params && req.params.shortUrl || null;
     
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(errorMessage);
     if (!userId) return new Error(errorMessage);
     if (!shortUrl) return new Error(errorMessage);
-
 
     // athenticate token user
     const belongsToUser: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
