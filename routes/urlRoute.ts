@@ -65,13 +65,13 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
 
 
     // athenticate token user
-    const userData: IToken = await authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as any;
+    const belongsToUser: boolean = await authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as boolean;
 
     // if not athenticated throw error
-    if (!userData) throw new Error(errorMessage);
+    if (!belongsToUser) throw new Error(errorMessage);
 
     // receives a shoten url from an anonymous user
-    const longURLData = await getUrlByShortUrl(shortUrl, null)
+    const longURLData = await getUrlByShortUrl(shortUrl, null);
     if (!longURLData) throw new Error(errorMessage);
         
     // TODO: add DTO
@@ -108,15 +108,13 @@ urlRoute.get("/urls/delete", async (req: Request, res: Response) => {
     if (!shortUrl) return new Error(`${errorMessage} 3`);
 
 
- 
     // athenticate token user
-    const userData: IToken = await authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as any;
-    console.log("USER DATA",userData)
+    const belongsToUser: boolean = await authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as boolean;
 
     // if not athenticated throw error
-    if (!userData) throw new Error(`${errorMessage} 4`);;
+    if (!belongsToUser) throw new Error(`${errorMessage} 4`);;
 
-    const isDeleted = await deleteByShortUrl(shortUrl, userData.id?.toString()!);
+    const isDeleted = await deleteByShortUrl(shortUrl, null);
 
     if (isDeleted) return res.json({ message: true});
     
@@ -153,11 +151,7 @@ urlRoute.get("/urls/new", async (req: Request, res: Response) => {
     if (!userId) return new Error(`${errorMessage} 2`);
     if (!longUrl) return new Error(`${errorMessage} 3`);
 
-    // console.log("IP", ip)
-    // console.log("AUTH TOKEN", authToken)
-    // console.log("userId", userId)
-    // console.log("LONG URL", longUrl)
-   
+
     // athenticate token user
     const userData: IToken = await authenticateTokenUser(userId, ip, authToken) as IToken;
 
@@ -209,10 +203,10 @@ urlRoute.get("/urls/user/:shortUrl", async (req: Request, res: Response) => {
 
 
     // athenticate token user
-    const userData: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
+    const belongsToUser: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
 
     // if not athenticated throw error
-    if (!userData) throw new Error(errorMessage);
+    if (!belongsToUser) throw new Error(errorMessage);
 
     // receives a shoten url from an anonymous user
     const longUrlData = await getUrlByShortUrl(shortUrl, null)
