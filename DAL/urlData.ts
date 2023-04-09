@@ -12,7 +12,11 @@ import { IUrlModel } from "./types/urlModel";
  * @returns 
  */
 export const getUrlsByUserId = async (userId: string): Promise<UrlModel[]> => {
-  return await UrlModel.findAll({ where : { userId } });
+  return await UrlModel.findAll({ where : 
+    { 
+      userId,
+      deletedAt: { [Op.eq]: null }
+    } });
 };
 
 
