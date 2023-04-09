@@ -23,7 +23,7 @@ urlRoute.get("/urls/user", async(req: Request, res: Response) => {
     if (!userId) return new Error(errorMessage);
  
     // athenticate token user
-    const userData: IToken = authenticateTokenUser(userId, ip, authToken) as IToken;
+    const userData: IToken = await authenticateTokenUser(userId, ip, authToken) as IToken;
 
     // if not athenticated throw error
     if (!userData) throw new Error(errorMessage);
@@ -65,7 +65,7 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
 
 
     // athenticate token user
-    const userData: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
+    const userData: IToken = await authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as any;
 
     // if not athenticated throw error
     if (!userData) throw new Error(errorMessage);
@@ -91,25 +91,32 @@ urlRoute.get("/urls/delete", async (req: Request, res: Response) => {
   const errorMessage = "Missing information for deleting url";
 
   try {
-    // const ip = "127.0.0.1";
-    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.body && req.body.token || null;
-    const userId = req.body && req.body.userId || null;
-    const shortUrl = req.body && req.body.shortUrl || null;
+    const ip = "127.0.0.1";
+    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    // const authToken = req.body && req.body.token || null;
+    // const userId = req.body && req.body.userId || null;
+    // const shortUrl = req.body && req.body.shortUrl || null;
+
+    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoibmljayIsImxhc3ROYW1lIjoic2FnaWFzIiwiZW1haWwiOiJteUVhbWlsQGdtYWlsIiwiZW1haWxWZXJpZmllZCI6bnVsbCwiYWN0aXZlIjp0cnVlLCJpYXQiOjE2ODA2NjQ2ODZ9.hjIgD9lyXP4VWY6vVfyyXLekqEK3DBsqgyHarvU2YZI";
+    const userId = "1";
+    const shortUrl = "cc8032"; 
+    
     
     if (!ip) throw new Error(errorMessage);
-    if (!authToken) return new Error(errorMessage);
-    if (!userId) return new Error(errorMessage);
-    if (!shortUrl) return new Error(errorMessage);
+    if (!authToken) return new Error(`${errorMessage} 1`);
+    if (!userId) return new Error(`${errorMessage} 2`);
+    if (!shortUrl) return new Error(`${errorMessage} 3`);
+
 
  
     // athenticate token user
-    const userData: IToken = authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as IToken;
+    const userData: IToken = await authenticateShortUrlBelongsToUser(userId, ip, shortUrl, authToken) as any;
+    console.log("USER DATA",userData)
 
     // if not athenticated throw error
-    if (!userData) throw new Error(errorMessage);
+    if (!userData) throw new Error(`${errorMessage} 4`);;
 
-    const isDeleted = await deleteByShortUrl(shortUrl, userData.userId?.toString()!);
+    const isDeleted = await deleteByShortUrl(shortUrl, userData.id?.toString()!);
 
     if (isDeleted) return res.json({ message: true});
     
@@ -117,7 +124,7 @@ urlRoute.get("/urls/delete", async (req: Request, res: Response) => {
  
   } catch (error: any) {
     console.error(error);
-    res.json({ message: errorMessage});
+    res.json({ message: `${errorMessage} 5`});
   }
 });
 
