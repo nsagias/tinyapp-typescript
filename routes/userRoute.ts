@@ -10,30 +10,32 @@ userRoute.post("/register", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    if (!ip) throw new Error(errorMessage);
+    if (!ip) throw new Error(`${errorMessage} 1`);
 
     // Check for body 
     const firstName = await req.body && req.body.firstName || null;
     const lastName = await req.body && req.body.lastName || null;
     const email = await req.body && req.body.email || null;
     const password = await req.body && req.body.password || null;
-    
   
+
     // check for empty strings
     const parsedEmail = email && email.trim();
     const parsedPassword = password && password.trim();
     const parsedFirstName = firstName && firstName.trim();
     const parsedLastName = lastName && lastName.trim();
 
-    if (!parsedFirstName || !parsedLastName  || !parsedEmail || !parsedPassword ) throw new Error("new_account_missing_information");
-    const token = await createAndLoginUser(parsedFirstName, parsedLastName, parsedEmail, parsedPassword, ip);
-   
-    if (!token) throw new Error(errorMessage);
-    return token;
+    if (!parsedFirstName || !parsedLastName  || !parsedEmail || !parsedPassword ) throw new Error(`${errorMessage} 2`);
+    const authData = await createAndLoginUser(parsedFirstName, parsedLastName, parsedEmail, parsedPassword, ip);
+      
+    if (!authData) throw new Error(`${errorMessage} 3`);
+    
+
+    return res.json(authData);
         
   } catch (error: any) {
       console.error("ERROR",error);
-      return res.json({ message: errorMessage});
+      return res.json({ message: `${errorMessage} 4`});
   };
  
 });
