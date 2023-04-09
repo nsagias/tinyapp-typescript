@@ -77,10 +77,9 @@ export const authenticateShortUrlBelongsToUser = async (userId: string, ip: stri
   //  authenticate token belongs to user
   const existingTokenRecordData = await authenticateTokenUser(userId, ip, authToken) as IUser;
   if (!existingTokenRecordData) return false;
-
   //  get user id, search for user URL for user by url id
-  const isExistsShortUrlForUser =  await getUrlByShortUrl(shortUrl, existingTokenRecordData.id?.toString())
- 
+  const isExistsShortUrlForUser =  await getUrlByShortUrl(shortUrl, existingTokenRecordData.id?.toString()!)
+
   // return true if existing
   if (isExistsShortUrlForUser) return true;
   return false;
