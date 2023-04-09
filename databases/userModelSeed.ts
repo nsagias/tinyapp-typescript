@@ -1,22 +1,25 @@
 import bcrypt2 from "bcryptjs";
-import { IUserModel } from "../types/user";
+import { IUser } from "../src/models/types/user";
 
-export let users: IUserModel[] = [
+export let users: IUser[] = [
    {
     id: 1,
-    name: "red",
+    firstName: "red",
+    lastName: "red",
     email: "red@example.com",
     password: bcrypt2.hashSync("abc123", 10)
   },
    {
     id: 2,
-    name: "green",
+    firstName: "green",
+    lastName: "green",
     email: "green@example.com",
     password: bcrypt2.hashSync("abc123", 10)
   },
  {
     id: 3, 
-    name: "blue",
+    firstName: "blue",
+    lastName: "blue",
     email: "blue@example.com",
     password: bcrypt2.hashSync("abc123", 10)
   }
