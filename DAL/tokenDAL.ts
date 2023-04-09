@@ -3,6 +3,7 @@ import { IToken } from "./types/token";
 import dotenv from "dotenv";
 import jwt from 'jsonwebtoken';
 import { Op } from "sequelize";
+import { IUser } from "./types/user";
 dotenv.config();
 
 
@@ -40,7 +41,7 @@ export const getTokenByUserIdAndIp = async (userId: string, tokenIp: string ): P
  * @param ip 
  * @returns token or null
  */
-export const createAccessToken = async (user: any, tokenIp: string ): Promise<IToken| null> => {
+export const createAccessToken = async (user: IUser | null , tokenIp: string ): Promise<IToken| null> => {
   // get auth secret and issuer from .env
   const authSecret = process.env.AUTH_SECRET || null;
   const issuer = process.env.TOKEN_ISSUER || null;
@@ -49,15 +50,14 @@ export const createAccessToken = async (user: any, tokenIp: string ): Promise<IT
   if (!authSecret || !issuer) return null;
 
   // Create signed auth token
-  const authToken = await jwt.sign(user, authSecret.toString());
+  const authToken = jwt.sign(user?.toString()!, authSecret.toString());
 
   // new token to be saved
-  const newTokenRecord: Token = { authToken, tokenIp, userId: user.id} as Token;
+  const newTokenRecord: Token = { authToken, tokenIp, userId: user?.id?.toString()} as Token;
 
   // Create new record
   return await Token.create(newTokenRecord) || null;
 };
-
 
 
 /**
@@ -109,7 +109,7 @@ export const deleteTokenById = async (id: number): Promise<boolean> => {
  */
 export const checkTokenForIpAndDelete = async (userId: string, ip: string): Promise<boolean | null> => {
   // check for existing
-  const isExistingToken = await getTokenByUserIdAndIp(userId, ip);
+  const isExistingToken = await getTokenByUserIdAndIp(userId.toString(), ip);
   // delete token before creating new token for ip
   if (!isExistingToken)  return null;
 
