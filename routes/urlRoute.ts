@@ -9,19 +9,15 @@ export const urlRoute = Router();
 /**
  * Get urls for user
  */
-urlRoute.get("/urls/user", async(req: Request, res: Response) => {
+urlRoute.get("/urls/users/:userId", async(req: Request, res: Response) => {
 
   const errorMessage = "Missing information for user";
 
   try {
-    // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    // const authToken = req.body && req.body.token || null;
-    // const userId = req.body && req.body.userId || null;
+    const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
+    const authToken = req.body && req.body.token || null;
+    const userId = req.params && req.params.userId || null;
 
-    const ip = "127.0.0.1";
-    const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoibmljayIsImxhc3ROYW1lIjoic2FnaWFzIiwiZW1haWwiOiJteUVhbWlsQGdtYWlsIiwiZW1haWxWZXJpZmllZCI6bnVsbCwiYWN0aXZlIjp0cnVlLCJpYXQiOjE2ODA2NjQ2ODZ9.hjIgD9lyXP4VWY6vVfyyXLekqEK3DBsqgyHarvU2YZI";
-    const userId = "1";
-  
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(errorMessage);
     if (!userId) return new Error(errorMessage);
@@ -55,7 +51,6 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
   const errorMessage = "Missing information for update";
 
   try {
-    // const ip = "127.0.0.1";
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
     const authToken = req.body && req.body.token || null;
     const userId = req.body && req.body.userId || null;
@@ -92,9 +87,9 @@ urlRoute.post("/urls/delete", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = await req.body && req.body.token;
-    const userId = await req.body && req.body.userId;
-    const shortUrl = await req.body && req.body.shortUrl;
+    const authToken = await req.body && req.body.token || null;
+    const userId = await req.body && req.body.userId || null;
+    const shortUrl = await req.body && req.body.shortUrl || null;
     
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(`${errorMessage} 1`);
