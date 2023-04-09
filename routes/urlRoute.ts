@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { createShortUrl, deleteByShortUrl, getUrlByShortUrl, getUrlByLongUrl, getUrlsByUserId}   from "../DAL/urlData";
 import { authenticateShortUrlBelongsToUser, authenticateTokenUser } from "../services/authService";
-import { IToken } from "../DAL/types/token";
+import { IToken } from "../models/types/token";
 import { updateUrlById } from "../DAL/urlData";
 import { UrlModel } from "../models";
 

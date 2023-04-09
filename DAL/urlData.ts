@@ -1,10 +1,6 @@
 import { Op } from "sequelize";
 import { UrlModel } from "../models/UrlModel";
 import { idGenerator } from "../services/utilsService";
-import { IToken } from "./types/token";
-import { IUrlModel } from "./types/urlModel";
-
-
 
 /**
  * Get all urls by user id

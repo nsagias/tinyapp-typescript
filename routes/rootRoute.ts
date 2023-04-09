@@ -5,12 +5,6 @@ export const rootRoute = Router();
 
 // home route
 rootRoute.get("/", async (req: Request, res: Response) => {
-
-  // const ip = "127.0.0.1";
-  // const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-  // if (!ip) throw new Error("Is logged in but no ip");
-
-  // TODO: check if is logged in
   res.json({message: "home"}) ; 
 });
 

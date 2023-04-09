@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import { checkTokenForIpAndDelete, createAccessToken, getTokenByUserIdAndIp } from "../DAL/tokenDAL";
-import { IUser } from "../DAL/types/user";
+import { IUser } from "../models/types/user";
 import { createUser, getUserByEmail } from "../DAL/userData";
 import jwt, { verify } from 'jsonwebtoken';
 import { getUrlByShortUrl } from "../DAL/urlData";

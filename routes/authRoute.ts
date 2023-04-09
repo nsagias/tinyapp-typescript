@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { IToken } from "../DAL/types/token";
+import { IToken } from "../models/types/token";
 import { authenticateTokenUser } from "../services/authService";
 
 export const authRoute = Router();
