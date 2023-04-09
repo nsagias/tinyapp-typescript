@@ -1,5 +1,5 @@
 import { Sequelize, Options } from "sequelize";
-import configs from "../../config/config.js"
+import configs from "../../../config/config.js"
 import dotenv from "dotenv";
 
 dotenv.config();

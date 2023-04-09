@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import logger from "morgan";
 import cors from "cors";
 import { routes } from './src/routes';
-import db from "./databases/sequelize/db";
+import db from "./src/databases/sequelize/db";
 import { initModels } from './src/models'
 
 dotenv.config();
