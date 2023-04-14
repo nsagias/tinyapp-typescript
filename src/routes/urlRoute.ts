@@ -75,7 +75,7 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
    
     const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl: updatedUrlData})
     if (updatedLongUrlData) {
-        return res.json({ message: "success"});
+        return res.json({ message: "success", data: updatedLongUrlData});
     }
     return res.json({ message: `${errorMessage} 7`});
    
