@@ -30,7 +30,6 @@ userRoute.post("/register", async (req: Request, res: Response) => {
       
     if (!authData) throw new Error(`${errorMessage} 3`);
     
-
     return res.json(authData);
         
   } catch (error: any) {
@@ -52,7 +51,7 @@ userRoute.post("/login", async(req: Request, res: Response) => {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
     const email = await req.body && req.body.email || null;
     const password = await req.body && req.body.password || null;
-
+   
     if (!ip) throw new Error(errorMessage);
 
     const parsedEmail = email && email.trim();
@@ -83,7 +82,7 @@ userRoute.post("/logout", async (req: Request, res: Response) => {
   // find token and logout token
 
   try {
-    const token = await req.body && req.body.token || null;
+    const token = req.headers.authorization || null;
     if (!token) return res.json({ message: errorMessage});
 
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
