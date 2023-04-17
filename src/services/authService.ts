@@ -37,7 +37,8 @@ export const comparePassword = async (password: string, hashedPassword: string):
  */
 export const authenticateToken = async (token: any): Promise<string | jwt.JwtPayload> => {
   const authSecret = process.env.AUTH_SECRET || null;
-  return await verify(token.toString(), authSecret!.toString());
+  if (!authSecret) throw new Error("No Auth");
+  return verify(token.toString(), authSecret!.toString());
 };
 
 
