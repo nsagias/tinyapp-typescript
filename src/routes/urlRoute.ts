@@ -17,8 +17,9 @@ urlRoute.get("/urls/users/:userId", async(req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = await req.body && req.body.token || null;
     const userId = req.params && req.params.userId || null;
+ 
+    const authToken = req.headers.authorization;
 
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(errorMessage);
@@ -30,7 +31,7 @@ urlRoute.get("/urls/users/:userId", async(req: Request, res: Response) => {
     // if not athenticated throw error
     if (!userData) throw new Error(errorMessage);
 
-    const urls = await getUrlsByUserId( userData.id?.toString()!);
+    const urls = await getUrlsByUserId( userId.toString()!);
    
     // TODO: DTO
     res.json({ message: "success",  data: urls });
