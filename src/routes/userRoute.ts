@@ -34,7 +34,7 @@ userRoute.post("/register", async (req: Request, res: Response) => {
         
   } catch (error: any) {
       console.error("ERROR",error);
-      return res.json({ message: `${errorMessage} 4`});
+      return res.json({ message: `${errorMessage} 4` });
   };
  
 });
@@ -69,7 +69,7 @@ userRoute.post("/login", async(req: Request, res: Response) => {
         
   } catch (error: any) {
     console.error("ERROR",error);
-    return res.json({ message: errorMessage});
+    return res.json({ message: errorMessage });
   }
 });
 
@@ -79,30 +79,29 @@ userRoute.post("/login", async(req: Request, res: Response) => {
  */
 userRoute.post("/logout", async (req: Request, res: Response) => {
   const errorMessage = "error occured while loging out";
+  
   // find token and logout token
-
   try {
     const token = req.headers.authorization || null;
-    if (!token) return res.json({ message: errorMessage});
+    if (!token) return res.json({ message: errorMessage });
 
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
 
     // TODO: ip validation
-    if (!ip) return res.json({ message: errorMessage});
+    if (!ip) return res.json({ message: errorMessage });
 
     // token verify and get email from token
-  
     const isLoggedOut = await  logout(ip, token);
     
     if (isLoggedOut) {
-      return res.json({ message: "logged out successfully" })
+      return res.json({ message: "logged out successfully" });
     }
     
-    res.json({ message: errorMessage })
+    res.json({ message: errorMessage });
       
     } catch (error: any) {
       console.error("ERROR",error);
-      return res.json({ message: errorMessage});
+      return res.json({ message: errorMessage });
     }
   
 });

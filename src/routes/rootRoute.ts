@@ -25,7 +25,7 @@ rootRoute.get("/u/:shortUrl", async (req: Request, res: Response) => {
     const longUrlData: UrlModel  = await getUrlByShortUrl(shortUrl, null) as UrlModel;
 
     // check if url exist
-    if (!longUrlData) throw new Error("URL does not exist")
+    if (!longUrlData) throw new Error("URL does not exist");
     
     // update count + 1
     await updateUrlById(longUrlData.id, { count: longUrlData.count + 1 });

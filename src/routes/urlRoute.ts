@@ -38,7 +38,7 @@ urlRoute.get("/urls/users/:userId", async(req: Request, res: Response) => {
     
   } catch (error: any) {
     console.error(error);
-    res.json({ message: errorMessage});
+    res.json({ message: errorMessage });
   }
 });
 
@@ -74,15 +74,15 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     if (!longUrlData) throw new Error(`${errorMessage} 6`);
 
    
-    const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl: updatedUrlData})
+    const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl: updatedUrlData });
     if (updatedLongUrlData) {
-        return res.json({ message: "success", data: updatedLongUrlData});
+        return res.json({ message: "success", data: updatedLongUrlData });
     }
-    return res.json({ message: `${errorMessage} 7`});
+    return res.json({ message: `${errorMessage} 7` });
    
   } catch (error: any) {
     console.error(error);
-    res.json({ message: `${errorMessage} 8`});
+    res.json({ message: `${errorMessage} 8` });
   }
 });
 
@@ -109,13 +109,13 @@ urlRoute.post("/urls/delete", async (req: Request, res: Response) => {
  
     const isDeleted = await deleteByShortUrl(shortUrl, null);
 
-    if (isDeleted) return res.json({ message: true});
+    if (isDeleted) return res.json({ message: true });
     
     res.json({ message: false});
  
   } catch (error: any) {
     console.error(error);
-    res.json({ message: `${errorMessage} 5`});
+    res.json({ message: `${errorMessage} 5` });
   }
 });
 
@@ -138,7 +138,6 @@ urlRoute.post("/urls/new", async (req: Request, res: Response) => {
     if (!userId) return new Error(`${errorMessage} 3`);
     if (!longUrl) return new Error(`${errorMessage} 4`);
 
-
     // athenticate token user
     const userData: IToken = await authenticateTokenUser(userId, ip, authToken) as IToken;
     // if not athenticated throw error
@@ -151,17 +150,17 @@ urlRoute.post("/urls/new", async (req: Request, res: Response) => {
     if (!existingLongUrl)  {
       // receives a shoten url from an anonymous user
       const longUrlData = await createShortUrl(longUrl, userData.id?.toString()!);
-      if (!longUrlData ) return res.json({ message: `${errorMessage} 6`});
+      if (!longUrlData ) return res.json({ message: `${errorMessage} 6` });
           
       // TODO: add DTO
-      return res.json({ message: "success", data: longUrlData});
+      return res.json({ message: "success", data: longUrlData });
     } 
     
-    res.json({ message: "existing long url"})
+    res.json({ message: "existing long url" });
 
   } catch (error: any) {
     console.error(error);
-    res.json({ message: `${errorMessage} 7`});
+    res.json({ message: `${errorMessage} 7` });
   }
 });
 
@@ -191,10 +190,10 @@ urlRoute.get("/urls/users/:userId/shortUrl/:shortUrl", async (req: Request, res:
     if (!belongsToUser) throw new Error(`${errorMessage} 5`);
 
     // receives a shoten url from an anonymous user
-    const longUrlData = await getUrlByShortUrl(shortUrl, null) 
+    const longUrlData = await getUrlByShortUrl(shortUrl, null);
     // TODO: add DTO
     // to return empty array value if there are not values
-    res.json({ message: "success", data: longUrlData});
+    res.json({ message: "success", data: longUrlData });
 
   } catch (error: any) {
     console.error(error);
