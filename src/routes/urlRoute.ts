@@ -19,7 +19,7 @@ urlRoute.get("/urls/users/:userId", async(req: Request, res: Response) => {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
     const userId = req.params && req.params.userId || null;
  
-    const authToken = req.headers.authorization;
+    const authToken = req.headers.authorization || null;
 
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(errorMessage);
@@ -53,7 +53,7 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = await req.body && req.body.token || null;
+    const authToken = req.headers.authorization || null;
     const userId = await req.body && req.body.userId || null;
     const shortUrl = await req.body && req.body.shortUrl || null;
     const updatedUrlData = await req.body && req.body.updatedUrlData || null;
@@ -92,7 +92,7 @@ urlRoute.post("/urls/delete", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = await req.body && req.body.token || null;
+    const authToken = req.headers.authorization || null;
     const userId = await req.body && req.body.userId || null;
     const shortUrl = await req.body && req.body.shortUrl || null;
     
@@ -129,7 +129,7 @@ urlRoute.post("/urls/new", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = await req.body && req.body.token || null;
+    const authToken = req.headers.authorization || null;
     const userId = await req.body && req.body.userId || null;
     const longUrl = await req.body && req.body.longUrl|| null;
     
@@ -175,7 +175,7 @@ urlRoute.get("/urls/users/:userId/shortUrl/:shortUrl", async (req: Request, res:
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = await req.body && req.body.token || null;
+    const authToken = req.headers.authorization || null;
     const userId = req.params && req.params.userId || null;
     const shortUrl = req.params && req.params.shortUrl || null;
     
