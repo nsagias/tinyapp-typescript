@@ -56,7 +56,7 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     const authToken = req.headers.authorization || null;
     const userId = await req.body && req.body.userId || null;
     const shortUrl = await req.body && req.body.shortUrl || null;
-    const updatedUrlData = await req.body && req.body.updatedUrlData || null;
+    const longUrl = await req.body && req.body.longUrl || null;
     
     if (!ip) throw new Error(`${errorMessage} 1`);
     if (!authToken) return new Error(`${errorMessage} 2`);
@@ -74,7 +74,7 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     if (!longUrlData) throw new Error(`${errorMessage} 6`);
 
    
-    const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl: updatedUrlData });
+    const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl });
     if (updatedLongUrlData) {
         return res.json({ message: "success", data: updatedLongUrlData });
     }
@@ -191,6 +191,7 @@ urlRoute.get("/urls/users/:userId/shortUrl/:shortUrl", async (req: Request, res:
 
     // receives a shoten url from an anonymous user
     const longUrlData = await getUrlByShortUrl(shortUrl, null);
+    console.log("DATA", longUrlData);
     // TODO: add DTO
     // to return empty array value if there are not values
     res.json({ message: "success", data: longUrlData });
