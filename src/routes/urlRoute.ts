@@ -53,11 +53,11 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.headers.authorization || null;
-    const userId = await req.body && req.body.userId || null;
-    const shortUrl = await req.body && req.body.shortUrl || null;
-    const longUrl = await req.body && req.body.longUrl || null;
-    
+    const authToken = await req.body.headers.Authorization || null;
+    const userId = await req.body && req.body.data.userId || null;
+    const shortUrl = await req.body && req.body.data.shortUrl || null;
+    const longUrl = await req.body && req.body.data.longUrl || null;
+  
     if (!ip) throw new Error(`${errorMessage} 1`);
     if (!authToken) return new Error(`${errorMessage} 2`);
     if (!userId) return new Error(`${errorMessage} 3`);
@@ -73,8 +73,8 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     const longUrlData = await getUrlByShortUrl(shortUrl, null);
     if (!longUrlData) throw new Error(`${errorMessage} 6`);
 
-   
-    const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl });
+    const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl: longUrl });
+    console.log("UPDATED LONG URL DATA", updatedLongUrlData);
     if (updatedLongUrlData) {
         return res.json({ message: "success", data: updatedLongUrlData });
     }
