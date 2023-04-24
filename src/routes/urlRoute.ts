@@ -74,7 +74,6 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
     if (!longUrlData) throw new Error(`${errorMessage} 6`);
 
     const updatedLongUrlData: UrlModel | null = await updateUrlById(longUrlData.id, { longUrl: longUrl });
-    console.log("UPDATED LONG URL DATA", updatedLongUrlData);
     if (updatedLongUrlData) {
         return res.json({ message: "success", data: updatedLongUrlData });
     }
