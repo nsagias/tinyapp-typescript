@@ -17,9 +17,8 @@ urlRoute.get("/urls/users/:userId", async(req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const userId = req.params && req.params.userId || null;
- 
-    const authToken = req.headers.authorization || null;
+    const userId = await req.params && req.params.userId || null;
+    const authToken = await req.headers.authorization || null;
 
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(errorMessage);
@@ -119,18 +118,17 @@ urlRoute.post("/urls/delete", async (req: Request, res: Response) => {
 });
 
 
-
 // urlRoute.post
 // new routes urls routes
 urlRoute.post("/urls/new", async (req: Request, res: Response) => {
 
   const errorMessage = "Missing information for creating short url";
-
+ 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.headers.authorization || null;
-    const userId = await req.body && req.body.userId || null;
-    const longUrl = await req.body && req.body.longUrl|| null;
+    const authToken = await req.body.token|| null;
+    const userId = await req.body && req.body.data && req.body.data.userId || null;
+    const longUrl = await req.body && req.body.data && req.body.data.longUrl || null;
     
     if (!ip) throw new Error(`${errorMessage} 1`);
     if (!authToken) return new Error(`${errorMessage} 2`);
@@ -138,23 +136,23 @@ urlRoute.post("/urls/new", async (req: Request, res: Response) => {
     if (!longUrl) return new Error(`${errorMessage} 4`);
 
     // athenticate token user
-    const userData: IToken = await authenticateTokenUser(userId, ip, authToken) as IToken;
+    const userData: any = await authenticateTokenUser(userId, ip, authToken) as IToken;
     // if not athenticated throw error
+
     if(!userData) throw new Error(`${errorMessage} 5`);
 
     // check if long name already exists
-    const existingLongUrl = await getUrlByLongUrl(userData.id?.toString()!, longUrl);
+    const existingLongUrl = await getUrlByLongUrl(userId, longUrl);
 
     // if not existing through error
     if (!existingLongUrl)  {
       // receives a shoten url from an anonymous user
-      const longUrlData = await createShortUrl(longUrl, userData.id?.toString()!);
+      const longUrlData = await createShortUrl(longUrl, userId);
       if (!longUrlData ) return res.json({ message: `${errorMessage} 6` });
           
       // TODO: add DTO
       return res.json({ message: "success", data: longUrlData });
     } 
-    
     res.json({ message: "existing long url" });
 
   } catch (error: any) {
