@@ -52,7 +52,7 @@ urlRoute.post("/urls/update", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = await req.body.headers.Authorization || null;
+    const authToken = await req.body.token || null;
     const userId = await req.body && req.body.data.userId || null;
     const shortUrl = await req.body && req.body.data.shortUrl || null;
     const longUrl = await req.body && req.body.data.longUrl || null;
