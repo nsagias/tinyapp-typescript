@@ -26,7 +26,7 @@ async function run() {
 
 run();
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,15 +38,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use("/", routes);
 
 // catch 404 error
-app.use((req, res, next) => {
-  // const err = new Error('Not Found');
-  // console.log(err);
-  // res.json({message: "Route not found"});
-  // TODO: get original address from socket
-  res.redirect("http://localhost:3001/404");
-  // next(err);
-  next();
-})
+// app.use((req, res, next) => {
+//   // const err = new Error('Not Found');
+//   // console.log(err);
+//   // res.json({message: "Route not found"});
+//   // TODO: get original address from socket
+//   res.redirect("http://localhost:3001/404");
+//   // next(err);
+//   next();
+// })
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
