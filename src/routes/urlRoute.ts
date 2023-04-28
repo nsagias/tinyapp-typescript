@@ -90,9 +90,9 @@ urlRoute.post("/urls/delete", async (req: Request, res: Response) => {
 
   try {
     const ip = req.socket && req.socket?.remoteAddress && req.socket?.remoteAddress.split("::ffff:")[1] || null;
-    const authToken = req.headers.authorization || null;
-    const userId = await req.body && req.body.userId || null;
-    const shortUrl = await req.body && req.body.shortUrl || null;
+    const authToken = await req.body.token || null;
+    const userId = await req.body && req.body.data.userId || null;
+    const shortUrl = await req.body && req.body.data.shortUrl || null;
     
     if (!ip) throw new Error(errorMessage);
     if (!authToken) return new Error(`${errorMessage} 1`);
@@ -104,11 +104,9 @@ urlRoute.post("/urls/delete", async (req: Request, res: Response) => {
 
     // if not athenticated throw error
     if (!belongsToUser) throw new Error(`${errorMessage} 4`);;
- 
     const isDeleted = await deleteByShortUrl(shortUrl, null);
 
     if (isDeleted) return res.json({ message: true });
-    
     res.json({ message: false});
  
   } catch (error: any) {
