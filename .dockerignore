@@ -1,0 +1,17 @@
+node_modules
+coverage
+build
+Dockerfile
+Dockerfile.prod
+docker*.yml
+.git
+.gitignore
+.config
+.npm
+.vscode
+README.md
+
+notes_tinyapp.js
+notes.md
+.env
+dist
