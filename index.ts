@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import logger from "morgan";
 import cors from "cors";
 import { routes } from './src/routes';
-import sequelize from "./src/databases/sequelize/db";
+import db from "./src/databases/sequelize/db";
 import { initModels } from './src/models'
 
 dotenv.config();
@@ -17,8 +17,8 @@ const origin: string | undefined = process.env.corsOptions;
 const corsOptions = { origin };
 
 async function run() {
-  initModels(sequelize)
-  await sequelize.sync()
+  initModels(db)
+  await db.sync()
   // await User.sync({ alter: true });
   // await UrlModel.sync({ alter: true });
   // await Token.sync({ alter: true })

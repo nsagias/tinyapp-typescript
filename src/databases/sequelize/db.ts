@@ -7,7 +7,7 @@ dotenv.config();
 const env = process.env.NODE_ENV || "development";
 const config = (configs as {[key: string]: Options})[env];
 
-const sequelize: Sequelize = new Sequelize({
+const db: Sequelize = new Sequelize({
   ...config,
   define: {
     underscored: true
@@ -15,11 +15,11 @@ const sequelize: Sequelize = new Sequelize({
 });
 
 try {
-  sequelize.authenticate();
+  db.authenticate();
   console.log("worked x")
 } catch (error) {
   console.log("DID NOT WORK");
 }
 
-export default sequelize;
+export default db;
 
